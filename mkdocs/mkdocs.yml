@@ -1,1 +1,40 @@
-site_name: My Docs
+site_name: Plan Generators
+theme:
+  name: material
+
+nav:
+  - Planners: index.md
+
+
+markdown_extensions:
+  - pymdownx.arithmatex:
+      generic: true
+
+extra_javascript:
+  - javascripts/config.js
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+
+markdown_extensions:
+  - pymdownx.highlight:
+      use_pygments: true
+
+markdown_extensions:
+  - pymdownx.highlight:
+      linenums: true
+
+markdown_extensions:
+  - pymdownx.highlight:
+      linenums_style: pymdownx.inline
+
+markdown_extensions:
+  - pymdownx.inlinehilite
+
+markdown_extensions:
+  - pymdownx.keys
+
+markdown_extensions:
+  - pymdownx.superfences
+
+markdown_extensions:
+  - pymdownx.snippets
