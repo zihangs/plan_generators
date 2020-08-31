@@ -1,171 +1,462 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="None">
+
+
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      <link rel="shortcut icon" href="assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-5.5.11">
+    
+    
+      
+        <title>Plan Generators</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.860688db.min.css">
+      
+      
+    
+    
+    
+      
+        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
+      
+    
+    
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
         
-        
-        <link rel="shortcut icon" href="img/favicon.ico">
-        <title>My Docs</title>
-        <link href="css/bootstrap.min.css" rel="stylesheet">
-        <link href="css/font-awesome.min.css" rel="stylesheet">
-        <link href="css/base.css" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
-
-        <script src="js/jquery-1.10.2.min.js" defer></script>
-        <script src="js/bootstrap.min.js" defer></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-        <script>hljs.initHighlightingOnLoad();</script> 
-    </head>
-
-    <body class="homepage">
-        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
-            <div class="container">
-                <a class="navbar-brand" href=".">My Docs</a>
-
-                <!-- Expanded navigation -->
-                <div id="navbar-collapse" class="navbar-collapse collapse">
-
-                    <ul class="nav navbar-nav ml-auto">
-                        <li class="nav-item">
-                            <a href="#" class="nav-link" data-toggle="modal" data-target="#mkdocs_search_modal">
-                                <i class="fa fa-search"></i> Search
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <div class="container">
-            <div class="row">
-                    <div class="col-md-3"><div class="navbar-light navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
-    <div class="navbar-header">
-        <button type="button" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#toc-collapse" title="Table of Contents">
-            <span class="fa fa-angle-down"></span>
-        </button>
+        <a href="#fi-planners" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid" aria-label="Header">
+    <a href="." title="Plan Generators" class="md-header-nav__button md-logo" aria-label="Plan Generators">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header-nav__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header-nav__title" data-md-component="header-title">
+      
+        <div class="md-header-nav__ellipsis">
+          <span class="md-header-nav__topic md-ellipsis">
+            Plan Generators
+          </span>
+          <span class="md-header-nav__topic md-ellipsis">
+            
+              Planners
+            
+          </span>
+        </div>
+      
+    </div>
+    
+      <label class="md-header-nav__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active">
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" data-md-component="search-reset" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+        
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="." title="Plan Generators" class="md-nav__button md-logo" aria-label="Plan Generators">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    Plan Generators
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Planners
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+    
+    <a href="." title="Planners" class="md-nav__link md-nav__link--active">
+      Planners
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#top-k-planner" class="md-nav__link">
+    Top k planner
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#top-quality-planner" class="md-nav__link">
+    Top quality planner
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#diverse-planner" class="md-nav__link">
+    Diverse planner
+  </a>
+  
+    <nav class="md-nav" aria-label="Diverse planner">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#diverse_agl" class="md-nav__link">
+    Diverse_agl
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#diverse_sat" class="md-nav__link">
+    Diverse_sat
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#diverse_bd" class="md-nav__link">
+    Diverse_bD
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#diversity-metrics" class="md-nav__link">
+    Diversity metrics
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+    
+  </li>
 
     
-    <div id="toc-collapse" class="navbar-collapse collapse card bg-secondary">
-        <ul class="nav flex-column">
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
             
-            <li class="nav-item" data-level="1"><a href="#welcome-to-mkdocs" class="nav-link">Welcome to MkDocs</a>
-              <ul class="nav flex-column">
-            <li class="nav-item" data-level="2"><a href="#commands" class="nav-link">Commands</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            <li class="nav-item" data-level="2"><a href="#project-layout" class="nav-link">Project layout</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-              </ul>
-            </li>
-        </ul>
-    </div>
-</div></div>
-                    <div class="col-md-9" role="main">
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#top-k-planner" class="md-nav__link">
+    Top k planner
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#top-quality-planner" class="md-nav__link">
+    Top quality planner
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#diverse-planner" class="md-nav__link">
+    Diverse planner
+  </a>
+  
+    <nav class="md-nav" aria-label="Diverse planner">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#diverse_agl" class="md-nav__link">
+    Diverse_agl
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#diverse_sat" class="md-nav__link">
+    Diverse_sat
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#diverse_bd" class="md-nav__link">
+    Diverse_bD
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#diversity-metrics" class="md-nav__link">
+    Diversity metrics
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                  
+                
+                
+                <h1 id="fi-planners">FI-planners</h1>
+<p>More details of FI-planners are explained in this paper, <a href="http://www.cs.toronto.edu/~shirin/AAAI-KatzM.5922.pdf">Reshaping Diverse Planning</a>. The planners can be accessed <a href="https://github.com/IBM/forbiditerative">here</a>.</p>
+<h2 id="top-k-planner">Top k planner</h2>
+<p>The top k planner returns a number of k best quality plans. We used this planner in the AAMAS paper. The plans we got are plans with the lowest costs (e.g. if k = 100, then we will get the first 100 best plans starting from a lowest cost plan).</p>
+<pre><code class="sh"># ./plan_topk.sh &lt;domain&gt; &lt;problem&gt; &lt;number-of-plans&gt;
+./plan_topk.sh examples/logistics00/domain.pddl examples/logistics00/probLOGISTICS-4-0.pddl 100
+</code></pre>
 
-<h1 id="welcome-to-mkdocs">Welcome to MkDocs</h1>
-<p>For full documentation visit <a href="https://www.mkdocs.org">mkdocs.org</a>.</p>
-<h2 id="commands">Commands</h2>
+<h2 id="top-quality-planner">Top quality planner</h2>
+<p>To use the top quality planner, we need set a quality-multiplier. For example, if quality-multiplier = 1.1, then this planner will return all the plans with a cost less than the lowest cost<span class="arithmatex">\(\times\)</span>1.1, the lowest cost is the cost of an optimal plan.</p>
+<pre><code class="sh"># ./plan_topq_via_topk.sh &lt;domain&gt; &lt;problem&gt; &lt;quality-multiplier&gt;
+./plan_topq_via_topk.sh examples/logistics00/domain.pddl examples/logistics00/probLOGISTICS-4-0.pddl 1.1
+</code></pre>
+
+<h2 id="diverse-planner">Diverse planner</h2>
+<p>There are 3 available diverse planners, <strong>diverse_agl</strong>, <strong>diverse_sat</strong> and <strong>diverse_bD</strong>.</p>
 <ul>
-<li><code>mkdocs new [dir-name]</code> - Create a new project.</li>
-<li><code>mkdocs serve</code> - Start the live-reloading docs server.</li>
-<li><code>mkdocs build</code> - Build the documentation site.</li>
-<li><code>mkdocs -h</code> - Print help message and exit.</li>
+<li>
+<h4 id="diverse_agl">Diverse_agl</h4>
+</li>
 </ul>
-<h2 id="project-layout">Project layout</h2>
-<pre><code>mkdocs.yml    # The configuration file.
-docs/
-    index.md  # The documentation homepage.
-    ...       # Other markdown pages, images and other files.
-</code></pre></div>
-            </div>
-        </div>
+<p>The diverse_agl planner is the foundation of the diverse_sat planner and the diverse_bD planner. The diverse_agl planner is similar to the top k planner mentioned above, it will take a number-of-plan (k) as input and then will return k plans from the lowest cost plan to the plans with higher costs (k best plans). However, the difference between these two planner is whether the planner will distinguish two plans with same actions but different orders. For example, plan 1 has an action sequence <A, A, B, D, C>, plan 2 has an action sequence <B, D, A, A, C>. In the top k planner, these are <strong>two</strong> different plans, but the diverse_agl planner treats these as <strong>one</strong> plans. For the diverse_agl planner, different plans must have different sets of actions.</p>
+<pre><code class="sh"># ./plan_diverse_agl.sh &lt;domain&gt; &lt;problem&gt; &lt;number-of-plans&gt;
+./plan_diverse_agl.sh examples/logistics00/domain.pddl examples/logistics00/probLOGISTICS-4-0.pddl 10
+</code></pre>
 
-        <footer class="col-md-12">
-            <hr>
-            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
-        </footer>
-        <script>
-            var base_url = ".",
-                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
-        </script>
-        <script src="js/base.js" defer></script>
-        <script src="search/main.js" defer></script>
+<ul>
+<li>
+<h4 id="diverse_sat">Diverse_sat</h4>
+</li>
+</ul>
+<p>The diverse_sat planner build on top of the diverse_agl plan. These two steps. The first step is the diverse_agl planner generating M number of plans. Then, the second step is selecting N number of plans from the plans generated by step 1. Notice that M need to be larger than N.</p>
+<p>For the selection stage, we need to rely on some diversity metrics for filtering the valid plans. There are 3 metrics provided (currently available) which are stability, uniqueness, state. Once a metric be chosen, the diverse_sat planner will get N valid plans out of M plan candidates generated in step 1. The selecting step follows a greedy algorithm, given a currently selected plan set, it aims to add a next plan that can maximize the metric for the current selected plan set. So the output not necessarily to be the optimal N valid plans.</p>
+<pre><code class="powershell">## See the dependencies below (1 and 2)
+# ./plan_diverse_sat.sh &lt;domain&gt; &lt;problem&gt; &lt;number-of-plans&gt; &lt;diversity-metric&gt; &lt;larger-number-of-plans&gt;
+./plan_diverse_sat.sh examples/logistics00/domain.pddl examples/logistics00/probLOGISTICS-4-0.pddl 10 stability 20
+</code></pre>
 
-        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="searchModalLabel">Search</h4>
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-            </div>
-            <div class="modal-body">
-                <p>
-                    From here you can search these documents. Enter
-                    your search terms below.
-                </p>
-                <form>
-                    <div class="form-group">
-                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
-                    </div>
-                </form>
-                <div id="mkdocs-search-results"></div>
-            </div>
-            <div class="modal-footer">
-            </div>
+<p>For the above code, the diverse_agl planner generates 20 plans. Then, from these 20 plans, select 10 plans which can maximizing the metric (greedily).</p>
+<ul>
+<li>
+<h4 id="diverse_bd">Diverse_bD</h4>
+</li>
+</ul>
+<p>The diverse_bD planner is similar as the diverse_sat, it post-process the founded plans from diverse_agl according to one of the metrics (stability, uniqueness, state). But in the selection stage, this planner set a boundary of the metric, if a next plan can satisfy the metric boundary requirement, then it will be add into the output set.</p>
+<pre><code class="sh">## See the dependencies below (1, 2, and 3)
+# ./plan_diverse_bounded.sh &lt;domain&gt; &lt;problem&gt; &lt;number-of-plans&gt; &lt;diversity-metric&gt; &lt;bound&gt; &lt;larger-number-of-plans&gt;
+./plan_diverse_bounded.sh examples/logistics00/domain.pddl examples/logistics00/probLOGISTICS-4-0.pddl 10 stability 0.25 20
+</code></pre>
+
+<h3 id="diversity-metrics">Diversity metrics</h3>
+<p>Both the diverse_sat planner and the diverse_bD planner need a <code>diversity-metric</code> as input. Generally, <code>diversity-metric</code> is the <strong>average number of pairwise dissimilarity</strong> (pairwise plan distance), <span class="arithmatex">\(\delta(\pi,\pi')=1-sim(\pi,\pi')\)</span>. And <span class="arithmatex">\(sim(\pi,\pi')\)</span> is the pairwise similarity between two plans <span class="arithmatex">\(\pi\)</span> and <span class="arithmatex">\(\pi'\)</span>, it is a number between 0 (two plans are unrelated) and 1 (two plans are equivalent). There are 3 ways (metrics) to compute the <span class="arithmatex">\(sim(\pi,\pi')\)</span> as below.</p>
+<p><strong>1. Stability</strong></p>
+<div class="arithmatex">\[sim_{stability}(\pi,\pi')=\frac{|A(\pi)\cap A(\pi')|}{|A(\pi)\cup A(\pi')|}\]</div>
+<p>It is a fraction of the number of actions occur in both plans over the total number of actions of these two plans. Notice that both A(<span class="arithmatex">\(\pi\)</span>) and A(<span class="arithmatex">\(\pi'\)</span>) stand for action sets. Related works are <a href="https://www.aaai.org/Papers/ICAPS/2006/ICAPS06-022.pdf">Fox et al.2006</a>; <a href="http://www.cse.lehigh.edu/~munoz/Publications/aaai11.pdf">Coman and Munoz-Avila 2011</a>.</p>
+<p><strong>2. Uniqueness</strong></p>
+<div class="arithmatex">\[sim_{uniqueness}(\pi,\pi') =
+\begin{cases}
+0, &amp; \text{if $A(\pi)$ \ $A(\pi')=\emptyset$} \\
+0, &amp; \text{if $A(\pi') \subset A(\pi)$} \\
+1, &amp; \text{otherwise}
+\end{cases}\]</div>
+<p>It only considers plans as action sets, A(<span class="arithmatex">\(\pi\)</span>) and A(<span class="arithmatex">\(\pi'\)</span>) are sets of <span class="arithmatex">\(\pi\)</span> and <span class="arithmatex">\(\pi'\)</span>. <span class="arithmatex">\(A(\pi) \mbox{ \\ } A(\pi')\)</span> means whether <span class="arithmatex">\(A(\pi)\)</span> has unique actions that not in <span class="arithmatex">\(A(\pi')\)</span>. Therefore, the uniqueness of two plans is 1 if both plans have unique actions not occur in the other plan, otherwise uniqueness is 0 (<a href="http://makro.ink/publications/robertsHoweRay14.icaps.evaluating.pdf">Roberts, Howe, and Ray 2014</a>).</p>
+<p><strong>3. State</strong></p>
+<p>Let <span class="arithmatex">\(\pi\)</span> and <span class="arithmatex">\(\pi'\)</span> be two plans, <span class="arithmatex">\(\{s_0,s_1,...,s_m\}\)</span> and <span class="arithmatex">\(\{s'_0,s'_1,...,s'_n\}\)</span> are the sequence of states if we apply <span class="arithmatex">\(\pi\)</span> and <span class="arithmatex">\(\pi'\)</span>. States are consist of predicates and let m <span class="arithmatex">\(\leq\)</span> n. Notice that from the states m+1 to n are ignored in this paper.
+$$
+sim_{state}(\pi,\pi')=\frac{1}{m} \times \sum_{i=1}^{m}{\Delta(s_i,s'_i)}
+$$</p>
+<div class="arithmatex">\[
+\Delta(s_i,s'_i)=1-\frac{|s_i \cap s'_i|}{|s_i \cup s'_i|}
+\]</div>
+<p>For example, if <span class="arithmatex">\(s_0=\{r_0,r_1\}\)</span>, <span class="arithmatex">\(s'_0=\{r_0,r_2\}\)</span>, then <span class="arithmatex">\(\Delta(s_0,s'_0)=\frac{2}{3}\)</span>. The related work can be found here (<a href="https://www.sciencedirect.com/science/article/pii/S0004370212000707">Nguyen et al. 2012</a>).</p>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
         </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+      </div>
+      
     </div>
-</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-            </div>
-            <div class="modal-body">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th style="width: 20%;">Keys</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td class="help shortcut"><kbd>?</kbd></td>
-                    <td>Open this help</td>
-                  </tr>
-                  <tr>
-                    <td class="next shortcut"><kbd>n</kbd></td>
-                    <td>Next page</td>
-                  </tr>
-                  <tr>
-                    <td class="prev shortcut"><kbd>p</kbd></td>
-                    <td>Previous page</td>
-                  </tr>
-                  <tr>
-                    <td class="search shortcut"><kbd>s</kbd></td>
-                    <td>Search</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="modal-footer">
-            </div>
-        </div>
+  </div>
+</footer>
+      
     </div>
-</div>
-
-    </body>
+    
+      <script src="assets/javascripts/vendor.df0def68.min.js"></script>
+      <script src="assets/javascripts/bundle.ba57d267.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents"}</script>
+      
+      <script>
+        app = initialize({
+          base: ".",
+          features: [],
+          search: Object.assign({
+            worker: "assets/javascripts/worker/search.5eca75d3.min.js"
+          }, typeof search !== "undefined" && search)
+        })
+      </script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
 </html>
-
-<!--
-MkDocs version : 1.1.2
-Build Date UTC : 2020-08-29 14:37:06.886985+00:00
--->
