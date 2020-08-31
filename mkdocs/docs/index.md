@@ -59,66 +59,34 @@ The diverse_bD planner is similar as the diverse_sat, it post-process the founde
 
 ### Diversity metrics
 
-pairwise dissimilarity (pairwise plan distance), $\delta(\pi,\pi')=1-sim(\pi,\pi')$
+Both the diverse_sat planner and the diverse_bD planner need a ``diversity-metric`` as input. Generally, ``diversity-metric`` is the **average number of pairwise dissimilarity** (pairwise plan distance), $\delta(\pi,\pi')=1-sim(\pi,\pi')$. And $sim(\pi,\pi')$ is the pairwise similarity between two plans $\pi$ and $\pi'$, it is a number between 0 (two plans are unrelated) and 1 (two plans are equivalent). There are 3 ways (metrics) to compute the $sim(\pi,\pi')$ as below.
 
-similarity measure: 0 (unrelated), 1 (equivalent), $sim(\pi,\pi')$
+**1. Stability**
 
-Diversity is the average number of pairwise dissimilarity, there are 3 different ways to calculate diversity.
+$$sim_{stability}(\pi,\pi')=\frac{|A(\pi)\cap A(\pi')|}{|A(\pi)\cup A(\pi')|}$$
 
-1. Stability
+It is a fraction of the number of actions occur in both plans over the total number of actions of these two plans. Notice that both A($\pi$) and A($\pi'$) stand for action sets. Related works are [Fox et al.2006](https://www.aaai.org/Papers/ICAPS/2006/ICAPS06-022.pdf); [Coman and Munoz-Avila 2011](http://www.cse.lehigh.edu/~munoz/Publications/aaai11.pdf).
 
-   Related work: 
+**2. Uniqueness**
 
-   [Plan Stability: Replanning versus Plan Repair](https://www.aaai.org/Papers/ICAPS/2006/ICAPS06-022.pdf), [Generating Diverse Plans Using Quantitative and Qualitative Plan Distance Metrics](http://www.cse.lehigh.edu/~munoz/Publications/aaai11.pdf)
+$$sim_{uniqueness}(\pi,\pi') =
+\begin{cases}
+0, & \text{if $A(\pi)$ \ $A(\pi')=\emptyset$} \\
+0, & \text{if $A(\pi') \subset A(\pi)$} \\
+1, & \text{otherwise}
+\end{cases}$$
 
-   paraphase
+It only considers plans as action sets, A($\pi$) and A($\pi'$) are sets of $\pi$ and $\pi'$. $A(\pi) \mbox{ \\ } A(\pi')$ means whether $A(\pi)$ has unique actions that not in $A(\pi')$. Therefore, the uniqueness of two plans is 1 if both plans have unique actions not occur in the other plan, otherwise uniqueness is 0 ([Roberts, Howe, and Ray 2014](http://makro.ink/publications/robertsHoweRay14.icaps.evaluating.pdf)).
 
-   measures the ratio of the number of actions that appear on both plans to the total number of actions on these plans. 
+**3. State**
 
-   A($\pi$) is the set of actions in $\pi$.
-
-2. Uniqueness
-
-3. State
-
-Related work: 
-
-Plan Stability: [Replanning versus Plan Repair](https://www.aaai.org/Papers/ICAPS/2006/ICAPS06-022.pdf), [Generating Diverse Plans Using Quantitative and Qualitative Plan Distance Metrics](http://www.cse.lehigh.edu/~munoz/Publications/aaai11.pdf)
-
-paraphase
-
-measures the ratio of the number of actions that appear on both plans to the total number of actions on these plans. 
-
-A($\pi$) is the set of actions in $\pi$.
-
+Let $\pi$ and $\pi'$ be two plans, $\{s_0,s_1,...,s_m\}$ and $\{s'_0,s'_1,...,s'_n\}$ are the sequence of states if we apply $\pi$ and $\pi'$. States are consist of predicates and let m $\leq$ n. Notice that from the states m+1 to n are ignored in this paper.
+$$
+sim_{state}(\pi,\pi')=\frac{1}{m} \times \sum_{i=1}^{m}{\Delta(s_i,s'_i)}
+$$
 
 $$
-sim_{stability}=\frac{|A(\pi)\cap A(\pi')|}{|A(\pi)\cup A(\pi')|}
+\Delta(s_i,s'_i)=1-\frac{|s_i \cap s'_i|}{|s_i \cup s'_i|}
 $$
-Uniqueness:
 
-Need to paraphase
-
-It is another measure that considers plans as action sets. It measures whether two plans are permutations of each other, or one plan is a partial plan (subset) of the other plan.
-
-
-
-and my graph
-
-
-
-Related work: [Evaluating Diversity In Classical Planning](http://makro.ink/publications/robertsHoweRay14.icaps.evaluating.pdf)
-
-
-
-State:
-
-this is related work: [Generating diverse plans to handle unknown and partially known user preferences](https://pdf.sciencedirectassets.com/271585/1-s2.0-S0004370212X00080/1-s2.0-S0004370212000707/main.pdf?X-Amz-Security-Token=IQoJb3JpZ2luX2VjECwaCXVzLWVhc3QtMSJHMEUCIQCsAKyMu%2BlHdic4q1bNJv9AxQsNQFUnU4Io2AUZ8dw0sQIgYpMAume2lKfKlBlSnwHmdAObT%2Bv1RRZP%2FbNwMU%2BxoXsqtAMIJRADGgwwNTkwMDM1NDY4NjUiDNtqGFoUNZ22c%2B8p3SqRA9cEYq8zzdtYR2%2FIISNj34S6B%2FHVDNFSxao17q%2BGvf49d%2FUH7SbYy%2FNuZQEhoX5XkQ9U6eVu5K6nWXLey%2FDK3Yjw4kQufwSIiUI9jdJGfZMZ9XMskYLAEaIqCkwV3eVfnK1%2Fjd8LmAR%2FT%2BAdaPPn9i0%2Bc3VZraO6C1SHdsZTaiPi1DXJ7IH%2FSDWNRYeZ8sBqdajRxTiCfKNoHxjqm6TeKr4qgA4Ow%2BmjePMfsOwsTF%2BZ4wI4rq5S5LnGdNuoZ7%2FJ1u4HV5kH5dfE%2BH5v73XfD1PkW3%2FvbxXJpnyhQwFANKdmCZoKJa4KPqtoLVXUEFpREN%2Fz2qg8XmTvFivlzrkoyXMWV7z8Z8YMfOgaavjIjLWv8hwOsoKXuT7zxvRoU18pr1CVHLPspNi8xmWRGU84T%2F5wAmpeNniSOFItTR0PlRBx%2F2WtpmjL%2BMPF28qo60yht8RxEKtPgiKx9dJ%2FIe%2BzvveiAS%2F3eyFhfZtQn2cI6IuHtROBCIAqEj%2FBQa%2BJzUNPIfCfs%2Bk2hrOL6V2HDqfxAJ70MPKip%2FoFOusBhT%2F4toLNa7pVUYaxc1uNZo6U2JE6A5MIlyTIt%2Bew7ZDx95b9HmQ7sEOyR6btpQY8yX%2Bzh5sr0utdsU%2BrDZyc7xfvZH1MNofMFVwS9OBsRig2hg%2B0f7XkgAE4dG%2FZ0yF17Wpw2grLl9dwcU6G3B2VQR1xvv85dUSmIeTBr%2BnlXSH84WDJtBGOrfqnrhW4vMv6aZeDVME8tQuoTMiNl4yBdg5KwUEDcRjlbsO86Cbx2OWAIV8TPPHf8xRvtBhudZ%2B74Pb0%2BgUm%2BQ2BPsB9vN0wDpWOjWLDVmb1ktpttIyK92LEjuztLMgx3gIpOQ%3D%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20200829T045538Z&X-Amz-SignedHeaders=host&X-Amz-Expires=300&X-Amz-Credential=ASIAQ3PHCVTYZQOLUWHI%2F20200829%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=2896d744031c74adbb1f0aa23cecbed672eeed1a326d2af9b6efb177851b9190&hash=9a717d3306a264084b924f385a4fa80c248ef488f279adea1a2eddabd6069dd1&host=68042c943591013ac2b2430a89b270f6af2c76d8dfd086a07176afe7c76c2c61&pii=S0004370212000707&tid=spdf-97e2be54-2ac3-4b00-87e5-7984b3ffadb1&sid=f3cf60ac9edd624bad58ecc9a2519d473821gxrqa&type=client)
-
-
-
-mkdocs:
-
-https://www.mkdocs.org/user-guide/deploying-your-docs/
-
-
+For example, if $s_0=\{r_0,r_1\}$, $s'_0=\{r_0,r_2\}$, then $\Delta(s_0,s'_0)=\frac{2}{3}$. The related work can be found here ([Nguyen et al. 2012](https://www.sciencedirect.com/science/article/pii/S0004370212000707)).
