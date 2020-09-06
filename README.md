@@ -16,4 +16,11 @@ better to use git clone, everything will be executable.
 
 change ``time.clock()`` to ``time.time()`` in ``src/translate/find_invariants.py``, and then again ``./build.py``.
 
+Install CPLEX: [instructions](http://www.fast-downward.org/LPBuildInstructions)
+
 Deployed and public available URL: https://zihangs.github.io/plan_generators/
+
+## Dataset
+
+Goal and plan recognition dataset can be accessed [here](https://github.com/pucrs-automated-planning/goal-plan-recognition-dataset/)
+
