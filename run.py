@@ -2,8 +2,8 @@ import os
 import fileinput
 
 # parameter configration
-trace_number = 100
-observation_percent = [10,30,50,70,100]
+trace_number = 10
+observation_percent = [50]
 domain_name = "blocks-world"
 dataset_name = "goal-plan-recognition-dataset"
 
@@ -51,12 +51,15 @@ def store_goal(hyps, real_hyp, store):
 
 # remove the invalid char at the end of strings
 def get_valid_str(string):
-	invalid_char = ["\n","\r"]
-	while(string[-1] in invalid_char):
-		string = string[0:-1]
-	if len(string) == 0:
-		print("Error: Empty string")
-		os._exit(0)
+	if string:
+		invalid_char = ["\n","\r"]
+		while(string[-1] in invalid_char):
+			string = string[0:-1]
+		if len(string) == 0:
+			print("Error: Empty string")
+			os._exit(0)
+		return string
+
 	return string
 
 # check and generate file or dir
@@ -187,17 +190,17 @@ for per in observation_percent:
 				os.system("cp %s %s" % (tmp_2, planner_dir))
 
 				# need to config parameters
-				os.system("%s/plan_topk.sh domain.pddl template.pddl 10" % planner_dir)
+				os.system("%s/plan_topk.sh %s/domain.pddl %s/template.pddl %s" % 
+					(planner_dir, planner_dir, planner_dir, str(trace_number)))
 
 				# move traces and delete
-				os.system("mv %s/found_plans/done/ %s" % (planner_dir, current_train_traces_path))
-				os.system("rm -rf %s/found_plans/" % planner_dir)
+				os.system("mv ./found_plans/done/ %s/" % current_train_traces_path)
+				os.system("rm -rf ./found_plans/")
 
-				os._exit(0)
 				# todo check if we get enough traces
 				tmp_1 = path_compose([current_train_traces_path, "done"])
-				tmp_2 = path_compose([current_train_traces_path, "goal_", str(num)])
-				os.rename('./'+tmp_1+'/', './'+tmp_2+'/')
+				tmp_2 = path_compose([current_train_traces_path, ("goal_" + str(num))])
+				os.rename(tmp_1, tmp_2)
 
 				num+=1
 				line = get_valid_str(hyps_f.readline())
