@@ -84,20 +84,139 @@ test_dir = "test"
 
 for per in observation_percent:
 	per_dir = str(per)
-
-	# create_dir_or_file(path_compose([data_dir, domain_dir, problems_dir, per_dir]))
-	# create_dir_or_file(path_compose([data_dir, domain_dir, test_dir, per_dir]))
-	# 
-
 	archived_list = os.listdir(path_compose([dataset_name, domain_name, per_dir]))
-	print(len(archived_list))
+
+	# track the template and hyp: check whether the <domain + goals> are identical
+	current_template = ""
+	current_hyp = ""
 
 	# extract tar.bz2
+	count = 0
+	for file in archived_list:
+		pro_num_dir = str(count)
+		test_number_dir = "p_" + str(count)
 
-	# prepare test set
+		current_problem_num_path = path_compose([data_dir, domain_dir, problems_dir, per_dir, pro_num_dir])
+		current_test_num_path = path_compose([data_dir, domain_dir, test_dir, per_dir, test_number_dir])
+		# only generate once
+		train_dir = "train"
+		current_train_traces_path = path_compose([data_dir, domain_dir, problems_dir, per_dir, pro_num_dir, train_dir])
+		
+		create_dir_or_file(current_problem_num_path)
+		create_dir_or_file(current_test_num_path)
+		create_dir_or_file(current_train_traces_path)
 
-	# prepare problem set
-	    # sas to xes
+		# copy the original tar.bz2 to current problem dir
+		ori_file = path_compose([dataset_name, domain_name, per_dir, file])
+		os.system("cp %s %s" % (ori_file, current_problem_num_path))
+
+		# extract copied tar.bz2 file (tar -xvjf filename.tar.bz2)
+		copied_tar = path_compose([current_problem_num_path, file])
+		os.system("tar -xvjf %s -C %s" % (copied_tar, current_problem_num_path))
+
+		# copy obs file to test dir
+		tmp_1 = path_compose([current_problem_num_path, "obs.dat"])
+		os.system("cp %s %s" % (tmp_1, current_test_num_path))
+		
+		# store a copy of template.pddl as template.stable.pddl
+		tmp_1 = path_compose([current_problem_num_path, "template.pddl"])
+		tmp_2 = path_compose([current_problem_num_path, "template_stable.pddl"])
+		os.system("cp %s %s" % (tmp_1, tmp_2))
+
+		# create goal tag in test (goal.txt)
+		tmp_1 = path_compose([current_problem_num_path, "hyps.dat"])
+		tmp_2 = path_compose([current_problem_num_path, "real_hyp.dat"])
+		tmp_3 = path_compose([current_test_num_path, "goal.txt"])
+		store_goal(tmp_1, tmp_2, tmp_3)
+
+		# add the cost tag in obs in test set
+		tmp_1 = path_compose([current_test_num_path, "obs.dat"])
+		with open(, 'a') as obs_f:
+			obs_f.writelines(';cost')
+			obs_f.close()
+
+
+		# generate traces using planners
+		tmp_1 = path_compose([current_problem_num_path, "template.pddl"])
+		tmp_2 = path_compose([current_problem_num_path, "hyps.dat"])
+		state_1 = len(current_template)>0
+		state_2 = files_equal(current_template, tmp_1)
+		state_3 = files_equal(current_hyp, tmp_2)
+
+		if (state_1 and state_2 and state_3):
+			############### current problem is identical as previous, doesn't need run planners #######
+			print("skip " + str(count))
+
+			# copy the xes to this folder
+			#last_num = str(count - 1)
+			#last_folder = path_compose([data_dir, domain_dir, problems_dir, per_dir, last_num, train_dir])
+			#copy_xes(last_folder, current_train_traces_path)
+		
+		else:
+			############################# need to call planner ################################
+
+			# select each goal in hyps and replace the line in template
+			hyps_f = open(new_folder_lv2+"hyps.dat")
+			num = 0  # goal tag
+			line = get_valid_str(hyps_f.readline())
+
+			# for each goal in hyps_f
+			while (line):
+
+				# print a progress indicator
+				print("Percent: " + str(percent) + ", Number: " + str(count) + ", Goal: " + str(num))
+				
+				hyp = line.replace(",", "\n")
+				# template_stable.pddl is always the original file
+				tmp_1 = path_compose([current_problem_num_path, "template_stable.pddl"])
+				tmp_2 = path_compose([current_problem_num_path, "template.pddl"])
+				os.system("cp %s %s" % (tmp_1, tmp_2))
+
+				# replace the <HYPOTHESIS> with a goal
+				with fileinput.input(tmp_2, inplace=True) as ft:
+					for line in ft:
+						new_line = line.replace('<HYPOTHESIS>', hyp)
+						print(new_line, end='')
+
+				#################### call plan for each goal ########################
+				# copy to the place for calling the planner
+				planner_dir = "./forbiditerative"
+				tmp_1 = path_compose([current_problem_num_path, "template.pddl"])
+				tmp_2 = path_compose([current_problem_num_path, "domain.pddl"])
+				os.system("cp %s %s" % (tmp_1, planner_dir))
+				os.system("cp %s %s" % (tmp_2, planner_dir))
+
+				# need to config parameters
+				os.system("%s/plan_topk.sh domain.pddl template.pddl 10" % planner_dir)
+
+				# move traces and delete
+				os.system("mv %s/found_plans/done/ %s" % (planner_dir, current_train_traces_path))
+				os.system("rm -rf %s/found_plans/" % planner_dir)
+
+				# todo check if we get enough traces
+				tmp_1 = path_compose([current_train_traces_path, "done"])
+				tmp_2 = path_compose([current_train_traces_path, "goal_", str(num)])
+				os.rename(tmp_1, tmp_2)
+
+				num+=1
+				line = get_valid_str(hyps_f.readline())
+			hyps_f.close()
+
+		# create XES
+		os.system("java -cp xes.jar generate_XES " + current_train_traces_path)
+
+		# update domain and problem file
+		current_template = path_compose([current_problem_num_path, "template_stable.pddl"])
+		current_hyp = path_compose([current_problem_num_path, "hyps.dat"])
+
+		count += 1
+
+		# break control
+		if count == 2:
+			break
+
+	print(count)
+
 
 
 
