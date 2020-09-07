@@ -131,7 +131,7 @@ for per in observation_percent:
 
 		# add the cost tag in obs in test set
 		tmp_1 = path_compose([current_test_num_path, "obs.dat"])
-		with open(, 'a') as obs_f:
+		with open(tmp_1, 'a') as obs_f:
 			obs_f.writelines(';cost')
 			obs_f.close()
 
@@ -139,11 +139,10 @@ for per in observation_percent:
 		# generate traces using planners
 		tmp_1 = path_compose([current_problem_num_path, "template.pddl"])
 		tmp_2 = path_compose([current_problem_num_path, "hyps.dat"])
-		state_1 = len(current_template)>0
-		state_2 = files_equal(current_template, tmp_1)
-		state_3 = files_equal(current_hyp, tmp_2)
 
-		if (state_1 and state_2 and state_3):
+		if (len(current_template)>0 and 
+			files_equal(current_template, tmp_1) and 
+			files_equal(current_hyp, tmp_2)):
 			############### current problem is identical as previous, doesn't need run planners #######
 			print("skip " + str(count))
 
@@ -156,7 +155,8 @@ for per in observation_percent:
 			############################# need to call planner ################################
 
 			# select each goal in hyps and replace the line in template
-			hyps_f = open(new_folder_lv2+"hyps.dat")
+
+			hyps_f = open(path_compose([current_problem_num_path, "hyps.dat"]))
 			num = 0  # goal tag
 			line = get_valid_str(hyps_f.readline())
 
@@ -164,7 +164,7 @@ for per in observation_percent:
 			while (line):
 
 				# print a progress indicator
-				print("Percent: " + str(percent) + ", Number: " + str(count) + ", Goal: " + str(num))
+				print("Percent: " + str(per) + ", Number: " + str(count) + ", Goal: " + str(num))
 				
 				hyp = line.replace(",", "\n")
 				# template_stable.pddl is always the original file
@@ -193,10 +193,11 @@ for per in observation_percent:
 				os.system("mv %s/found_plans/done/ %s" % (planner_dir, current_train_traces_path))
 				os.system("rm -rf %s/found_plans/" % planner_dir)
 
+				os._exit(0)
 				# todo check if we get enough traces
 				tmp_1 = path_compose([current_train_traces_path, "done"])
 				tmp_2 = path_compose([current_train_traces_path, "goal_", str(num)])
-				os.rename(tmp_1, tmp_2)
+				os.rename('./'+tmp_1+'/', './'+tmp_2+'/')
 
 				num+=1
 				line = get_valid_str(hyps_f.readline())
