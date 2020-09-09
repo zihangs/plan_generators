@@ -4,6 +4,7 @@ theme:
 
 nav:
   - Planners: index.md
+  - Parameter Table: table.md
 
 
 markdown_extensions:

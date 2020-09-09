@@ -10,16 +10,16 @@
       
       
       
-      <link rel="shortcut icon" href="/assets/images/favicon.png">
+      <link rel="shortcut icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-5.5.11">
     
     
       
-        <title>Plan Generators</title>
+        <title>Parameter Table - Plan Generators</title>
       
     
     
-      <link rel="stylesheet" href="/assets/stylesheets/main.860688db.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.860688db.min.css">
       
       
     
@@ -48,6 +48,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#configurable-parameters-planners-miners" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -55,7 +60,7 @@
     
       <header class="md-header" data-md-component="header">
   <nav class="md-header-nav md-grid" aria-label="Header">
-    <a href="/." title="Plan Generators" class="md-header-nav__button md-logo" aria-label="Plan Generators">
+    <a href=".." title="Plan Generators" class="md-header-nav__button md-logo" aria-label="Plan Generators">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
@@ -72,7 +77,7 @@
           </span>
           <span class="md-header-nav__topic md-ellipsis">
             
-              
+              Parameter Table
             
           </span>
         </div>
@@ -129,7 +134,7 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="/." title="Plan Generators" class="md-nav__button md-logo" aria-label="Plan Generators">
+    <a href=".." title="Plan Generators" class="md-nav__button md-logo" aria-label="Plan Generators">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
@@ -146,7 +151,7 @@
 
 
   <li class="md-nav__item">
-    <a href="/." title="Planners" class="md-nav__link">
+    <a href=".." title="Planners" class="md-nav__link">
       Planners
     </a>
   </li>
@@ -156,11 +161,20 @@
       
       
 
+  
 
-  <li class="md-nav__item">
-    <a href="/table/" title="Parameter Table" class="md-nav__link">
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+    <a href="./" title="Parameter Table" class="md-nav__link md-nav__link--active">
       Parameter Table
     </a>
+    
   </li>
 
     
@@ -171,12 +185,90 @@
               </div>
             
             
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
           
           <div class="md-content">
             <article class="md-content__inner md-typeset">
               
-  <h1>404 - Not found</h1>
-
+                
+                
+                  
+                
+                
+                <h1 id="configurable-parameters-planners-miners">Configurable Parameters (Planners + Miners)</h1>
+<p>Param:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Directly Flow Miner</th>
+<th>Transition System Miner</th>
+<th>Split Miner</th>
+<th>Inductive Miner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Top-k</td>
+<td><strong>k</strong>: number of plans<br /><strong>t</strong>: threshold</td>
+<td><strong>k</strong>: number of plans<br /></td>
+<td><strong>k</strong>: number of plans</td>
+<td><strong>k</strong>: number of plans<br /><strong>t</strong>: threshold</td>
+</tr>
+<tr>
+<td>Top-q<br />ordered</td>
+<td><strong>q</strong>: quality<br /><strong>t</strong>: threshold</td>
+<td><strong>q</strong>: quality<br /></td>
+<td><strong>q</strong>: quality</td>
+<td><strong>q</strong>: quality<br /><strong>t</strong>: threshold</td>
+</tr>
+<tr>
+<td>Top-q<br />unordered</td>
+<td><strong>q</strong>: quality<br /><strong>t</strong>: threshold</td>
+<td><strong>q</strong>: quality<br /></td>
+<td><strong>q</strong>: quality</td>
+<td><strong>q</strong>: quality<br /><strong>t</strong>: threshold</td>
+</tr>
+<tr>
+<td>Diverse agl</td>
+<td><strong>k</strong>: number of plans<br /><strong>t</strong>: threshold</td>
+<td><strong>k</strong>: number of plans<br /></td>
+<td><strong>k</strong>: number of plans</td>
+<td><strong>k</strong>: number of plans<br /><strong>t</strong>: threshold</td>
+</tr>
+<tr>
+<td>Diverse sat</td>
+<td><strong>k</strong>: number of plans <br /><strong>h</strong>: a larger number<br /><strong>m</strong>: metric name<br /><strong>t</strong>: threshold</td>
+<td><strong>k</strong>: number of plans<br /><strong>h</strong>: a larger number<br /><strong>m</strong>: metric name<br /></td>
+<td><strong>k</strong>: number of plans<br /><strong>h</strong>: a larger number<br /><strong>m</strong>: metric name</td>
+<td><strong>k</strong>: number of plans<br /><strong>h</strong>: a larger number<br /><strong>m</strong>: metric name<br /><strong>t</strong>: threshold</td>
+</tr>
+<tr>
+<td>Diverse bD</td>
+<td><strong>k</strong>: number of plans <br /><strong>h</strong>: a larger number<br /><strong>m</strong>: metric name<br /><strong>b</strong>: bound<br /><strong>t</strong>: threshold</td>
+<td><strong>k</strong>: number of plans<br /><strong>h</strong>: a larger number<br /><strong>m</strong>: metric name<br /><strong>b</strong>: bound<br /></td>
+<td><strong>k</strong>: number of plans<br /><strong>h</strong>: a larger number<br /><strong>m</strong>: metric name<br /><strong>b</strong>: bound</td>
+<td><strong>k</strong>: number of plans<br /><strong>h</strong>: a larger number<br /><strong>m</strong>: metric name<br /><strong>b</strong>: bound<br /><strong>t</strong>: threshold</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Notice: the column of Transition System Miner hasn't completed yet. Now, it only contains the parameters from planner side, more parameters from miner side coming soon.</strong></p>
+                
+              
               
                 
 
@@ -189,6 +281,27 @@
       
         
 <footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
+        
+          <a href=".." title="Planners" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+            </div>
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Planners
+              </div>
+            </div>
+          </a>
+        
+        
+      </nav>
+    </div>
   
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
@@ -206,15 +319,15 @@
       
     </div>
     
-      <script src="/assets/javascripts/vendor.df0def68.min.js"></script>
-      <script src="/assets/javascripts/bundle.ba57d267.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents"}</script>
+      <script src="../assets/javascripts/vendor.df0def68.min.js"></script>
+      <script src="../assets/javascripts/bundle.ba57d267.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents"}</script>
       
       <script>
         app = initialize({
-          base: "/",
+          base: "..",
           features: [],
           search: Object.assign({
-            worker: "/assets/javascripts/worker/search.5eca75d3.min.js"
+            worker: "../assets/javascripts/worker/search.5eca75d3.min.js"
           }, typeof search !== "undefined" && search)
         })
       </script>
