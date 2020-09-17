@@ -24,18 +24,18 @@ Deployed and public available URL: https://zihangs.github.io/plan_generators/
 
 Goal and plan recognition dataset can be accessed [here](https://github.com/pucrs-automated-planning/goal-plan-recognition-dataset/)
 
-## TODO
+## Approaches to compare
 
-contact these authors: https://github.com/pucrs-automated-planning/diverse-plan-rec
+GR using planner:
 
-TS Miners: if that doesn't work contact Verbeek
+Felipe's implementing: https://github.com/pucrs-automated-planning/diverse-plan-rec
 
-Build the ivy environment, eclipse download all the codes, using breaking point to check.
+Shirin's implementing: https://github.com/shirin888/planrecogasplanning-ijcai16-benchmarks
 
-check whether two models from prom and from code are identical?
+GR approaches mentioned in AAMAS:
 
-prepare data tables
+landmark approach: https://github.com/pucrs-automated-planning/Planning-GoalRecognition
 
-complete tools generating xes petri nets
+Code to run AAAI-10 version but using latest BFWS planners as satisficing reasoners: https://github.com/nirlipo/pnet-pr/tree/master/pr_as_planning
 
-improve the GR code
+
