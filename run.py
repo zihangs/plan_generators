@@ -1,4 +1,6 @@
 import os
+import time
+import timeout_decorator
 import fileinput
 
 # parameter configration
@@ -6,6 +8,14 @@ trace_number = 10
 observation_percent = [50]
 domain_name = "blocks-world"
 dataset_name = "goal-plan-recognition-dataset"
+timeout_clock = 1   # in seconds
+
+
+timeout_report_path = './gene_data/report.csv'
+data_dir = "gene_data"
+domain_dir = "blocks-world"
+problems_dir = "problems"
+test_dir = "test"
 
 # To check whether two problems are identical
 def files_equal(file1, file2):
@@ -78,12 +88,14 @@ def path_compose(nameList):
 		name += (elem + "/")
 	return name[0:-1]
 
+@timeout_decorator.timeout(timeout_clock)
+def run_planner_with_timeout(planner_dir, trace_number):
+	os.system("%s/plan_topk.sh %s/domain.pddl %s/template.pddl %s" % 
+			(planner_dir, planner_dir, planner_dir, str(trace_number)))
+
 ############## create the dir ###############
 
-data_dir = "gene_data"
-domain_dir = "blocks-world"
-problems_dir = "problems"
-test_dir = "test"
+
 
 for per in observation_percent:
 	per_dir = str(per)
@@ -163,6 +175,8 @@ for per in observation_percent:
 			num = 0  # goal tag
 			line = get_valid_str(hyps_f.readline())
 
+			is_timeout = False
+
 			# for each goal in hyps_f
 			while (line):
 
@@ -188,10 +202,23 @@ for per in observation_percent:
 				tmp_2 = path_compose([current_problem_num_path, "domain.pddl"])
 				os.system("cp %s %s" % (tmp_1, planner_dir))
 				os.system("cp %s %s" % (tmp_2, planner_dir))
+				
+				
+				try:
+					# need to config parameters
+					run_planner_with_timeout(planner_dir, trace_number)
+				except:
+					os.system("rm -rf ./found_plans/")
+					# remove the whole problem and test
+					os.system("rm -rf %s/" % current_problem_num_path)
+					os.system("rm -rf %s/" % current_test_num_path)
 
-				# need to config parameters
-				os.system("%s/plan_topk.sh %s/domain.pddl %s/template.pddl %s" % 
-					(planner_dir, planner_dir, planner_dir, str(trace_number)))
+					mode = 'a' if os.path.exists(timeout_report_path) else 'w'
+					with open(timeout_report_path, mode) as f:
+						f.write("%s, %s, %s, %s\n" % (domain_name, per_dir, pro_num_dir, file))
+
+					is_timeout = True
+					break
 
 				# move traces and delete
 				os.system("mv ./found_plans/done/ %s/" % current_train_traces_path)
@@ -204,20 +231,25 @@ for per in observation_percent:
 
 				num+=1
 				line = get_valid_str(hyps_f.readline())
+			
 			hyps_f.close()
 
-		# create XES
-		os.system("java -cp xes.jar generate_XES " + current_train_traces_path)
 
-		# update domain and problem file
-		current_template = path_compose([current_problem_num_path, "template_stable.pddl"])
-		current_hyp = path_compose([current_problem_num_path, "hyps.dat"])
+		if not is_timeout:
+			# create XES
+			os.system("java -cp xes.jar generate_XES " + current_train_traces_path)
+
+			# update domain and problem file
+			current_template = path_compose([current_problem_num_path, "template_stable.pddl"])
+			current_hyp = path_compose([current_problem_num_path, "hyps.dat"])
 
 		count += 1
 
+		
 		# break control
 		if count == 2:
 			break
+		
 
 	print(count)
 
