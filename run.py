@@ -93,17 +93,25 @@ def run_planner_with_timeout(planner_dir, trace_number):
 	os.system("%s/plan_topk.sh %s/domain.pddl %s/template.pddl %s" % 
 			(planner_dir, planner_dir, planner_dir, str(trace_number)))
 
+class problem:
+	def __init__(self, template, hyp):
+		self.template = template
+		self.hyp = hyp
+
+	def exist(self):
+		return self.template and self.hyp  # "" is Flase, otherwise True
+
+	def identical(self, other):  # a instance of problem
+		return files_equal(self.template, other.template) and files_equal(self.hyp, other.hyp)
+
+
 ############## create the dir ###############
-
-
-
 for per in observation_percent:
 	per_dir = str(per)
 	archived_list = os.listdir(path_compose([dataset_name, domain_name, per_dir]))
 
 	# track the template and hyp: check whether the <domain + goals> are identical
-	current_template = ""
-	current_hyp = ""
+	current_problem = problem("", "") # initialize the first problem
 
 	# extract tar.bz2
 	count = 0
@@ -151,14 +159,13 @@ for per in observation_percent:
 			obs_f.close()
 
 
-		# generate traces using planners
-		tmp_1 = path_compose([current_problem_num_path, "template.pddl"])
-		tmp_2 = path_compose([current_problem_num_path, "hyps.dat"])
+		# generate tmp_problem for tracking
+		tmp_problem = problem(path_compose([current_problem_num_path, "template.pddl"]),
+			path_compose([current_problem_num_path, "hyps.dat"]))
 
-		if (len(current_template)>0 and 
-			files_equal(current_template, tmp_1) and 
-			files_equal(current_hyp, tmp_2)):
-			############### current problem is identical as previous, doesn't need run planners #######
+
+		if (current_problem.exist() and current_problem.identical(tmp_problem)):
+			# current problem is identical as previous, doesn't need run planners
 			print("skip " + str(count))
 
 			# copy the xes to this folder
@@ -240,8 +247,7 @@ for per in observation_percent:
 			os.system("java -cp xes.jar generate_XES " + current_train_traces_path)
 
 			# update domain and problem file
-			current_template = path_compose([current_problem_num_path, "template_stable.pddl"])
-			current_hyp = path_compose([current_problem_num_path, "hyps.dat"])
+			current_problem = tmp_problem
 
 		count += 1
 
@@ -249,7 +255,6 @@ for per in observation_percent:
 		# break control
 		if count == 2:
 			break
-		
 
 	print(count)
 
