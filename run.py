@@ -1,17 +1,33 @@
 import os
+import sys
 import time
 import timeout_decorator
 import fileinput
 
-# parameter configration
-trace_number = 10
-observation_percent = [50]
+# need to configure (set absolute path)
+# export DIVERSE_SCORE_COMPUTATION_PATH=/home/zihang/plan_generators/diversescore
+
+# CONFIGURABLE VARIABLES
 domain_name = "blocks-world"
-dataset_name = "goal-plan-recognition-dataset"
-timeout_clock = 100  # in seconds
+planner_name = "diverse_bD"
+trace_number = 10
+metric = "stability"   # stability, uniqueness, state
+larger_number = 20
+bound = 0.1
 
-timeout_report_path = './gene_data/report.csv'
+# CONSTANt VARIABLES
+OBSERVATION_PERCENT = [50]
+TIMEOUT_CLOCK = 100  # in seconds
 
+DATASET_NAME = "goal-plan-recognition-dataset"
+PROBLEM_DIR = "problems"
+TEST_DIR = "test"
+TIMEOUT_REPORT_PATH = './gene_data/report.csv'
+OUTPUT = "gene_data"
+DOMAIN = "blocks-world"
+
+
+################################# HELPER FUNCTIONS ##############################
 # To check whether two problems are identical
 def files_equal(file1, file2):
 	f1 = open(file1, "r")
@@ -27,12 +43,11 @@ def files_equal(file1, file2):
 
 	return True
 
-# store the tag number of real goal in a txt file
-# the number tag starts from 0
+# Store the tag number of real goal in a txt file, the number tag starts from 0
 def store_goal(hyps, real_hyp, store):
 	f1 = open(hyps, "r")
 	f2 = open(real_hyp, "r")
-	# remove "\n"
+	# Remove "\n"
 	a_hyp = get_valid_str(f1.readline())
 	real = get_valid_str(f2.readline())
 
@@ -46,7 +61,7 @@ def store_goal(hyps, real_hyp, store):
 			f1.close()
 			f2.close()
 			txt.close()
-			return count # real goal found
+			return count # Real goal found
 
 		a_hyp = get_valid_str(f1.readline())
 		count += 1
@@ -54,7 +69,7 @@ def store_goal(hyps, real_hyp, store):
 	print("Error: Not found the real goal")
 	return os._exit(0)
 
-# remove the invalid char at the end of strings
+# Remove the invalid char at the end of strings
 def get_valid_str(string):
 	if string:
 		invalid_char = ["\n","\r"]
@@ -67,16 +82,16 @@ def get_valid_str(string):
 
 	return string
 
-# check and generate file or dir
+# Check and generate file or dir
 def create_dir_or_file(name):
 	if not os.path.exists(name):
 		os.makedirs(name)
 	else:
 		print("Error: " + name + " ---- already exists")
 		os._exit(0)
-	return 0   # sucessfully created the dir
+	return 0   # Sucessfully created the dir
 
-# can return either dir or file
+# Can return either a directory or a file
 def path_compose(nameList):
 	name = ""
 	for elem in nameList:
@@ -87,12 +102,43 @@ def path_compose(nameList):
 		name += (elem + "/")
 	return name[0:-1]
 
-@timeout_decorator.timeout(timeout_clock)
+# Run the planner, with a timeout setting
+@timeout_decorator.timeout(TIMEOUT_CLOCK)
 def run_planner_with_timeout(planner_dir, trace_number):
-	os.system("%s/plan_topk.sh %s/domain.pddl %s/template.pddl %s" % 
-			(planner_dir, planner_dir, planner_dir, str(trace_number)))
+	issue_status = False
+
+	# for differet planners
+	# top-k
+	if planner_name == "top_k":
+		os.system("%s/plan_topk.sh %s/domain.pddl %s/template.pddl %s" % 
+				(planner_dir, planner_dir, planner_dir, str(trace_number)))
+
+	elif planner_name == "diverse_agl":
+		os.system("%s/plan_diverse_agl.sh %s/domain.pddl %s/template.pddl %s" % 
+				(planner_dir, planner_dir, planner_dir, str(trace_number)))
+
+	# need change directory
+	elif planner_name == "diverse_sat":
+		os.chdir("%s" % planner_dir)
+		#cwd = os.getcwd() 
+		#print(cwd)
+		os.system("./plan_diverse_sat.sh domain.pddl template.pddl %s %s %s" % 
+				(str(trace_number), metric, str(larger_number)))
+		os.chdir("..")
+
+	elif planner_name == "diverse_bD":
+		os.chdir("%s" % planner_dir)
+		os.system("./plan_diverse_bounded.sh domain.pddl template.pddl %s %s %s %s" % 
+				(str(trace_number), metric, bound, str(larger_number)))
+		os.chdir("..")
+
+	else:
+		issue_status = True
+		print("No planner founded!")
+	return issue_status
 
 
+###################################### HELPER CLASSES ##################################
 class problem:
 	def __init__(self, template, hyp):
 		self.template = template
@@ -101,21 +147,21 @@ class problem:
 	def exist(self):
 		return self.template and self.hyp  # "" is Flase, otherwise True
 
-	def identical(self, other):  # a instance of problem
+	def identical(self, other):  # Input: a instance of problem
 		return files_equal(self.template, other.template) and files_equal(self.hyp, other.hyp)
 
 
 class extracted_dir:
 	def __init__(self, data_output, domain, percentage, number, file):
 
-		# info
+		# Info
 		self.data_output = data_output
 		self.domain = domain
 		self.percentage = percentage
 		self.number = number
 		self.tar = file
 
-		# prepare
+		# Prepare
 		self.create_problem_path()
 		self.create_test_path()
 		self.create_train_trace_path()
@@ -126,7 +172,7 @@ class extracted_dir:
 		self.current_problem_num_path = path
 
 	def create_test_path(self):
-		# test_number_dir = "p_" + str(count)
+		## self.number :: "p_" + str(self.number)
 		path = path_compose([self.data_output, self.domain, TEST_DIR, self.percentage, self.number])
 		create_dir_or_file(path)
 		self.current_test_num_path = path
@@ -137,7 +183,7 @@ class extracted_dir:
 		self.current_train_traces_path = path
 
 	def extract_tar(self):
-		tar_file = path_compose([dataset_name, self.domain, self.percentage, self.tar])
+		tar_file = path_compose([DATASET_NAME, self.domain, self.percentage, self.tar])
 		os.system("tar -xvjf %s -C %s" % (tar_file, self.current_problem_num_path))
 
 	def copy_obs_to_test(self):
@@ -145,7 +191,7 @@ class extracted_dir:
 		os.system("cp %s %s" % (tmp, self.current_test_num_path))
 
 	def store_template_stable(self):
-		# store a copy of template.pddl as template.stable.pddl
+		# Store a copy of template.pddl as template.stable.pddl
 		tmp_1 = path_compose([self.current_problem_num_path, "template.pddl"])
 		tmp_2 = path_compose([self.current_problem_num_path, "template_stable.pddl"])
 		os.system("cp %s %s" % (tmp_1, tmp_2))
@@ -172,65 +218,106 @@ class planner_manager:
 	def close_hyps_file(self):
 		self.hyps_list.close()
 
+	# Iterate all goals (hyps), and generate plans for each goal and templete domain.
+	# Return an indicator of timeout (True = timeout and failed / False = succeed)
 	def iter_each_goals(self):
 		self.open_hyps_file()
 		current_goal = get_valid_str(self.hyps_list.readline())
+		planner_dir = "./forbiditerative"
+
+
 		is_timeout = False
-		# goal tag start from 0
+		# Goal tag starts from 0
 		num = 0
 		while (current_goal):
 			current_goal = current_goal.replace(",", "\n")
-			# duplicate a template.pddl and rename as template_stable.pddl
+			# Duplicate a template.pddl and rename as template_stable.pddl
 			tmp_1 = path_compose([self.extracted_dir.current_problem_num_path, "template_stable.pddl"])
 			tmp_2 = path_compose([self.extracted_dir.current_problem_num_path, "template.pddl"])
 			os.system("cp %s %s" % (tmp_1, tmp_2))
 
-			# replace the <HYPOTHESIS> with a goal
+			# Replace the <HYPOTHESIS> with a goal (hyp)
 			with fileinput.input(tmp_2, inplace=True) as ft:
 				for line in ft:
 					new_line = line.replace('<HYPOTHESIS>', current_goal)
 					print(new_line, end='')
 
-			# generate plans
-			is_timeout = self.create_plans()
+			# Generate plans (maybe timeout)
+			is_timeout = self.create_plans(planner_dir)
 			if is_timeout:
 				break
 
-			# move traces and delete
-			os.system("mv ./found_plans/done/ %s/" % self.extracted_dir.current_train_traces_path)
-			os.system("rm -rf ./found_plans/")
 
-			# todo check if we get enough traces
-			tmp_1 = path_compose([self.extracted_dir.current_train_traces_path, "done"])
-			tmp_2 = path_compose([self.extracted_dir.current_train_traces_path, ("goal_" + str(num))])
-			os.rename(tmp_1, tmp_2)
+
+
+			# TODO: check if we get enough traces
+			# add code later
+
+
+
+			# Where is the output directory
+
+
+
+			# Move traces and delete
+			if planner_name == "diverse_agl":
+				os.system("mv ./found_plans/ %s/" % self.extracted_dir.current_train_traces_path)
+				os.system("rm -rf ./found_plans/")
+
+				# Rename
+				tmp_1 = path_compose([self.extracted_dir.current_train_traces_path, "found_plans"])
+				tmp_2 = path_compose([self.extracted_dir.current_train_traces_path, ("goal_" + str(num))])
+				os.rename(tmp_1, tmp_2)
+
+			elif planner_name in ["diverse_sat", "diverse_bD"]:
+				os.system("mv %s/found_plans/done/ %s/" % (planner_dir, self.extracted_dir.current_train_traces_path))
+				os.system("rm -rf %s/found_plans/" % planner_dir)
+
+				# Rename
+				tmp_1 = path_compose([self.extracted_dir.current_train_traces_path, "done"])
+				tmp_2 = path_compose([self.extracted_dir.current_train_traces_path, ("goal_" + str(num))])
+				os.rename(tmp_1, tmp_2)
+
+			else:
+				os.system("mv ./found_plans/done/ %s/" % self.extracted_dir.current_train_traces_path)
+				os.system("rm -rf ./found_plans/")
+
+				# Rename
+				tmp_1 = path_compose([self.extracted_dir.current_train_traces_path, "done"])
+				tmp_2 = path_compose([self.extracted_dir.current_train_traces_path, ("goal_" + str(num))])
+				os.rename(tmp_1, tmp_2)
 
 			num+=1
+			# Update current goal
 			current_goal = get_valid_str(self.hyps_list.readline())
 		self.close_hyps_file()
 
 		return is_timeout
 
-	def create_plans(self):
+
+	def create_plans(self, planner_dir):
 		# copy pddls to right place
-		planner_dir = "./forbiditerative"
+		
 		tmp_1 = path_compose([self.extracted_dir.current_problem_num_path, "template.pddl"])
 		tmp_2 = path_compose([self.extracted_dir.current_problem_num_path, "domain.pddl"])
 		os.system("cp %s %s" % (tmp_1, planner_dir))
 		os.system("cp %s %s" % (tmp_2, planner_dir))
 		try:
 			# need to config parameters
-			run_planner_with_timeout(planner_dir, trace_number)
+			has_issues = run_planner_with_timeout(planner_dir, trace_number)
+			if has_issues:
+				os._exit(0)
 			# return timeout = False
 			return False
 		except:
+			os.chdir("..")
 			os.system("rm -rf ./found_plans/")
 			# remove the whole problem and test
 			os.system("rm -rf %s/" % self.extracted_dir.current_problem_num_path)
 			os.system("rm -rf %s/" % self.extracted_dir.current_test_num_path)
 
-			mode = 'a' if os.path.exists(timeout_report_path) else 'w'
-			with open(timeout_report_path, mode) as f:
+			mode = 'a' if os.path.exists(TIMEOUT_REPORT_PATH) else 'w'
+			with open(TIMEOUT_REPORT_PATH, mode) as f:
 				f.write("%s, %s, %s, %s\n" % (self.extracted_dir.domain,
 					self.extracted_dir.percentage, self.extracted_dir.number,
 					self.extracted_dir.tar))
@@ -238,16 +325,10 @@ class planner_manager:
 			return True
 
 
-############## create the dir ###############
-PROBLEM_DIR = "problems"
-#problems_dir
-TEST_DIR = "test"
-#test_dir
-data_dir = "gene_data"
-domain_dir = "blocks-world"
+################################## MAIN SCRIPT ############################
 
-for per in observation_percent:
-	archived_list = os.listdir(path_compose([dataset_name, domain_name, per]))
+for per in OBSERVATION_PERCENT:
+	archived_list = os.listdir(path_compose([DATASET_NAME, domain_name, per]))
 
 	# track the template and hyp: check whether the <domain + goals> are identical
 	current_problem = problem("", "") # initialize the first problem
@@ -255,7 +336,7 @@ for per in observation_percent:
 	# extract tar.bz2
 	count = 0
 	for file in archived_list:
-		working_dir = extracted_dir(data_dir, domain_dir, per, count, file)
+		working_dir = extracted_dir(OUTPUT, DOMAIN, per, count, file)
 		working_dir.extract_tar()
 		working_dir.copy_obs_to_test()
 		working_dir.store_template_stable()
@@ -291,5 +372,5 @@ for per in observation_percent:
 			break
 
 
-
+print(sys.argv)
 
