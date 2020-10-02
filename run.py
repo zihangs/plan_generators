@@ -6,16 +6,13 @@ import fileinput
 # need to configure (set absolute path)
 # export DIVERSE_SCORE_COMPUTATION_PATH=/home/zihang/plan_generators/diversescore
 
-# CONFIGURABLE VARIABLES
-domain_name = "blocks-world"
-planner_name = "diverse_sat"
-trace_number = 10
-metric = "stability"   # stability, uniqueness, state
-larger_number = 20
-bound = 0.1
+# python run.py top_k 10
+# python run.py diverse_agl 10
+# python run.py diverse_sat 10 stability 20
+# python run.py diverse_bD 10 stability 0.1 20
 
 # CONSTANt VARIABLES
-OBSERVATION_PERCENT = [70, 100]
+OBSERVATION_PERCENT = [70]
 TIMEOUT_CLOCK = 10  # in seconds
 
 DATASET_NAME = "goal-plan-recognition-dataset"
@@ -23,9 +20,6 @@ PROBLEM_DIR = "problems"
 TEST_DIR = "test"
 TIMEOUT_REPORT_PATH = './gene_data/report.csv'
 OUTPUT = "gene_data"
-DOMAIN = "blocks-world"
-
-# print(sys.argv)
 
 ################################# HELPER FUNCTIONS ##############################
 # To check whether two problems are identical
@@ -304,7 +298,6 @@ class planner_manager:
 			os.system("rm -rf %s/" % self.extracted_dir.current_problem_num_path)
 			os.system("rm -rf %s/" % self.extracted_dir.current_test_num_path)
 
-			print(os.getcwd())
 			mode = 'a' if os.path.exists(TIMEOUT_REPORT_PATH) else 'w'
 			with open(TIMEOUT_REPORT_PATH, mode) as f:
 				f.write("%s, %s, %s, %s\n" % (self.extracted_dir.domain,
@@ -315,51 +308,72 @@ class planner_manager:
 
 
 ################################## MAIN SCRIPT ############################
+# CONFIGURABLE VARIABLES
 
-for per in OBSERVATION_PERCENT:
-	archived_list = os.listdir(path_compose([DATASET_NAME, domain_name, per]))
+DOMAIN_LIST = ["blocks-world"]
 
-	# track the template and hyp: check whether the <domain + goals> are identical
-	current_problem = problem("", "") # initialize the first problem
+planner_name = sys.argv[1]
+if planner_name == "diverse_sat":
+	trace_number = int(sys.argv[2])
+	metric = sys.argv[3]   # stability, uniqueness, state
+	larger_number = int(sys.argv[4])
 
-	# extract tar.bz2
-	count = 0
-	for file in archived_list:
-		working_dir = extracted_dir(OUTPUT, DOMAIN, per, count, file)
-		working_dir.extract_tar()
-		working_dir.copy_obs_to_test()
-		working_dir.store_template_stable()
-		working_dir.add_goal_tag()
-		working_dir.add_cost_suffix()
-		# generate tmp_problem for tracking
-		tmp_problem = problem(path_compose([working_dir.current_problem_num_path, "template.pddl"]),
-			path_compose([working_dir.current_problem_num_path, "hyps.dat"]))
+elif planner_name == "top_k":
+	trace_number = int(sys.argv[2])
 
-		has_timeout = False
+elif planner_name == "diverse_agl":
+	trace_number = int(sys.argv[2])
 
-		if (current_problem.exist() and current_problem.identical(tmp_problem)):
-			# current problem is identical as previous, doesn't need run planners
-			print("skip " + str(count))
-		
-		else:
-			############################# need to call planner ################################
+elif planner_name == "diverse_bD":
+	trace_number = int(sys.argv[2])
+	metric = sys.argv[3]   # stability, uniqueness, state
+	bound = float(sys.argv[4])
+	larger_number = int(sys.argv[5])
 
-			manager = planner_manager(working_dir)
-			has_timeout = manager.iter_each_goals()
+for domain in DOMAIN_LIST:
+	for per in OBSERVATION_PERCENT:
+		archived_list = os.listdir(path_compose([DATASET_NAME, domain, per]))
 
-		if not has_timeout:
-			# create XES
-			os.system("java -cp xes.jar generate_XES " + working_dir.current_train_traces_path)
+		# track the template and hyp: check whether the <domain + goals> are identical
+		current_problem = problem("", "") # initialize the first problem
 
-			# update domain and problem file
-			current_problem = tmp_problem
+		# extract tar.bz2
+		count = 0
+		for file in archived_list:
+			working_dir = extracted_dir(OUTPUT, domain, per, count, file)
+			working_dir.extract_tar()
+			working_dir.copy_obs_to_test()
+			working_dir.store_template_stable()
+			working_dir.add_goal_tag()
+			working_dir.add_cost_suffix()
+			# generate tmp_problem for tracking
+			tmp_problem = problem(path_compose([working_dir.current_problem_num_path, "template.pddl"]),
+				path_compose([working_dir.current_problem_num_path, "hyps.dat"]))
 
-		count += 1
+			has_timeout = False
 
-		# break control
-		if count == 2:
-			break
+			if (current_problem.exist() and current_problem.identical(tmp_problem)):
+				# current problem is identical as previous, doesn't need run planners
+				print("skip " + str(count))
+			
+			else:
+				############################# need to call planner ################################
 
+				manager = planner_manager(working_dir)
+				has_timeout = manager.iter_each_goals()
+
+			if not has_timeout:
+				# create XES
+				os.system("java -cp xes.jar generate_XES " + working_dir.current_train_traces_path)
+
+				# update domain and problem file
+				current_problem = tmp_problem
+
+			count += 1
+
+			# break control
+			if count == 2:
+				break
 
 
 
