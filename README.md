@@ -28,27 +28,46 @@ Goal and plan recognition dataset can be accessed [here](https://github.com/pucr
 
 ### Instruction of trace generating script
 
-Required python 3 to run.py. The planners are in `./forbiditerative/` directory, need to build and test if the planners can run (a few dependency need to install). The generated traces are stored in `./gene_data/` directory (TODO: explain the structure of traces).
+Required python 3 to run.py. The planners are in `./forbiditerative/` directory, need to build and test if the planners can run (a few dependency need to install). The generated traces are stored in `./gene_data/` directory 
 
-```sh
-# haven't add parameters in CL
-python run.py
-```
+**To build a common interface of planner:**
+
+- Where to put the planner (dir)?
+- Where are the domain (original) dataset?
+- Where does the generated trace stored? 
+
+(TODO: explain the structure of traces).
 
 Planner specific parameters (top_k, diverse_agl, diverse_sat, diverse_bD):
 
-- top_k: domain_name, planner_name, trace_number
-- diverse_agl: domain_name, planner_name, trace_number
-- diverse_sat: domain_name, planner_name, trace_number, metric, larger_number
-- diverse_bD: domain_name, planner_name, trace_number, metric, bound, larger_number
+- top_k: planner_name, trace_number
+- diverse_agl: planner_name, trace_number
+- diverse_sat: planner_name, trace_number, metric, larger_number
+- diverse_bD: planner_name, trace_number, metric, bound, larger_number
+
+```sh
+# python run.py <planner_name> <trace_number>
+python run.py top_k 10
+
+# python run.py <planner_name> <trace_number>
+python run.py diverse_agl 10
+
+# python run.py <planner_name> <trace_number> <metric> <larger_number>
+python run.py diverse_sat 10 stability 20
+
+# python run.py <planner_name> <trace_number> <metric> <bound> <larger_number>
+python run.py diverse_bD 10 stability 0.1 20
+```
+
+
 
 ## Approaches to compare
 
 GR using planner:
 
-Felipe's implementing: https://github.com/pucrs-automated-planning/diverse-plan-rec
+Landmark approach (Felipe): https://github.com/pucrs-automated-planning/diverse-plan-rec
 
-Shirin's implementing: https://github.com/shirin888/planrecogasplanning-ijcai16-benchmarks
+GR as planning (Shirin): https://github.com/shirin888/planrecogasplanning-ijcai16-benchmarks
 
 GR approaches mentioned in AAMAS:
 
