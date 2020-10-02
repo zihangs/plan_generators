@@ -1,7 +1,6 @@
 import os
 import sys
 import time
-import timeout_decorator
 import fileinput
 
 # need to configure (set absolute path)
@@ -9,15 +8,15 @@ import fileinput
 
 # CONFIGURABLE VARIABLES
 domain_name = "blocks-world"
-planner_name = "diverse_bD"
+planner_name = "diverse_sat"
 trace_number = 10
 metric = "stability"   # stability, uniqueness, state
 larger_number = 20
 bound = 0.1
 
 # CONSTANt VARIABLES
-OBSERVATION_PERCENT = [50]
-TIMEOUT_CLOCK = 100  # in seconds
+OBSERVATION_PERCENT = [70, 100]
+TIMEOUT_CLOCK = 10  # in seconds
 
 DATASET_NAME = "goal-plan-recognition-dataset"
 PROBLEM_DIR = "problems"
@@ -26,6 +25,7 @@ TIMEOUT_REPORT_PATH = './gene_data/report.csv'
 OUTPUT = "gene_data"
 DOMAIN = "blocks-world"
 
+# print(sys.argv)
 
 ################################# HELPER FUNCTIONS ##############################
 # To check whether two problems are identical
@@ -103,39 +103,46 @@ def path_compose(nameList):
 	return name[0:-1]
 
 # Run the planner, with a timeout setting
-@timeout_decorator.timeout(TIMEOUT_CLOCK)
+# @timeout_decorator.timeout(TIMEOUT_CLOCK)
 def run_planner_with_timeout(planner_dir, trace_number):
-	issue_status = False
-
 	# for differet planners
 	# top-k
+
 	if planner_name == "top_k":
-		os.system("%s/plan_topk.sh %s/domain.pddl %s/template.pddl %s" % 
-				(planner_dir, planner_dir, planner_dir, str(trace_number)))
+		os.chdir("%s" % planner_dir)
+		exit_code = os.system("timeout %s ./plan_topk.sh domain.pddl template.pddl %s" % 
+				(str(TIMEOUT_CLOCK), str(trace_number)))
+		os.chdir("..")
 
 	elif planner_name == "diverse_agl":
-		os.system("%s/plan_diverse_agl.sh %s/domain.pddl %s/template.pddl %s" % 
-				(planner_dir, planner_dir, planner_dir, str(trace_number)))
+		os.chdir("%s" % planner_dir)
+		exit_code = os.system("timeout %s ./plan_diverse_agl.sh domain.pddl template.pddl %s" % 
+				(str(TIMEOUT_CLOCK), str(trace_number)))
+		os.chdir("..")
 
 	# need change directory
 	elif planner_name == "diverse_sat":
 		os.chdir("%s" % planner_dir)
-		#cwd = os.getcwd() 
-		#print(cwd)
-		os.system("./plan_diverse_sat.sh domain.pddl template.pddl %s %s %s" % 
-				(str(trace_number), metric, str(larger_number)))
+		exit_code = os.system("timeout %s ./plan_diverse_sat.sh domain.pddl template.pddl %s %s %s" % 
+				(str(TIMEOUT_CLOCK), str(trace_number), metric, str(larger_number)))
 		os.chdir("..")
 
 	elif planner_name == "diverse_bD":
 		os.chdir("%s" % planner_dir)
-		os.system("./plan_diverse_bounded.sh domain.pddl template.pddl %s %s %s %s" % 
-				(str(trace_number), metric, bound, str(larger_number)))
+		exit_code = os.system("timeout %s ./plan_diverse_bounded.sh domain.pddl template.pddl %s %s %s %s" % 
+				(str(TIMEOUT_CLOCK), str(trace_number), metric, bound, str(larger_number)))
 		os.chdir("..")
 
 	else:
-		issue_status = True
 		print("No planner founded!")
-	return issue_status
+		os._exit(0)
+
+	if exit_code != 0:
+		return True  # timeout = true
+	else:
+		return False # no timeout
+		
+
 
 
 ###################################### HELPER CLASSES ##################################
@@ -247,29 +254,23 @@ class planner_manager:
 			if is_timeout:
 				break
 
-
-
-
 			# TODO: check if we get enough traces
 			# add code later
 
-
-
 			# Where is the output directory
-
-
 
 			# Move traces and delete
 			if planner_name == "diverse_agl":
-				os.system("mv ./found_plans/ %s/" % self.extracted_dir.current_train_traces_path)
-				os.system("rm -rf ./found_plans/")
+				os.system("mv %s/found_plans/ %s/" % (planner_dir, self.extracted_dir.current_train_traces_path))
+				os.system("rm -rf %s/found_plans/" % planner_dir)
 
 				# Rename
 				tmp_1 = path_compose([self.extracted_dir.current_train_traces_path, "found_plans"])
 				tmp_2 = path_compose([self.extracted_dir.current_train_traces_path, ("goal_" + str(num))])
 				os.rename(tmp_1, tmp_2)
 
-			elif planner_name in ["diverse_sat", "diverse_bD"]:
+			# elif planner_name in ["diverse_sat", "diverse_bD"]:
+			else:
 				os.system("mv %s/found_plans/done/ %s/" % (planner_dir, self.extracted_dir.current_train_traces_path))
 				os.system("rm -rf %s/found_plans/" % planner_dir)
 
@@ -278,14 +279,6 @@ class planner_manager:
 				tmp_2 = path_compose([self.extracted_dir.current_train_traces_path, ("goal_" + str(num))])
 				os.rename(tmp_1, tmp_2)
 
-			else:
-				os.system("mv ./found_plans/done/ %s/" % self.extracted_dir.current_train_traces_path)
-				os.system("rm -rf ./found_plans/")
-
-				# Rename
-				tmp_1 = path_compose([self.extracted_dir.current_train_traces_path, "done"])
-				tmp_2 = path_compose([self.extracted_dir.current_train_traces_path, ("goal_" + str(num))])
-				os.rename(tmp_1, tmp_2)
 
 			num+=1
 			# Update current goal
@@ -302,27 +295,23 @@ class planner_manager:
 		tmp_2 = path_compose([self.extracted_dir.current_problem_num_path, "domain.pddl"])
 		os.system("cp %s %s" % (tmp_1, planner_dir))
 		os.system("cp %s %s" % (tmp_2, planner_dir))
-		try:
-			# need to config parameters
-			has_issues = run_planner_with_timeout(planner_dir, trace_number)
-			if has_issues:
-				os._exit(0)
-			# return timeout = False
-			return False
-		except:
-			os.chdir("..")
-			os.system("rm -rf ./found_plans/")
+
+		timeout = run_planner_with_timeout(planner_dir, trace_number)
+
+		if timeout:
+			os.system("rm -rf %s/found_plans/" % planner_dir)
 			# remove the whole problem and test
 			os.system("rm -rf %s/" % self.extracted_dir.current_problem_num_path)
 			os.system("rm -rf %s/" % self.extracted_dir.current_test_num_path)
 
+			print(os.getcwd())
 			mode = 'a' if os.path.exists(TIMEOUT_REPORT_PATH) else 'w'
 			with open(TIMEOUT_REPORT_PATH, mode) as f:
 				f.write("%s, %s, %s, %s\n" % (self.extracted_dir.domain,
 					self.extracted_dir.percentage, self.extracted_dir.number,
 					self.extracted_dir.tar))
-			# return timeout = True
-			return True
+
+		return timeout
 
 
 ################################## MAIN SCRIPT ############################
@@ -372,5 +361,5 @@ for per in OBSERVATION_PERCENT:
 			break
 
 
-print(sys.argv)
+
 
