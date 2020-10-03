@@ -28,7 +28,7 @@ Goal and plan recognition dataset can be accessed [here](https://github.com/pucr
 
 ### Instruction of trace generating script
 
-Required python 3 to run.py. The planners are in `./forbiditerative/` directory, need to build and test if the planners can run (a few dependency need to install). The generated traces are stored in `./gene_data/` directory 
+Required python 3 to run.py. Require to download planners ([FI](https://github.com/IBM/forbiditerative)), store the planners in `./forbiditerative/` directory, need to build and test if the planners can run (a few dependency need to install). The generated traces are stored in `./gene_data/` directory 
 
 **To build a common interface of planner:**
 
