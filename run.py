@@ -3,18 +3,10 @@ import sys
 import time
 import fileinput
 
-# need to configure (set absolute path)
-# export DIVERSE_SCORE_COMPUTATION_PATH=/home/zihang/plan_generators/diversescore
-
-# python run.py top_k 10
-# python run.py diverse_agl 10
-# python run.py diverse_sat 10 stability 20
-# python run.py diverse_bD 10 stability 0.1 20
+from config_param import *
 
 # CONSTANt VARIABLES
-OBSERVATION_PERCENT = [70]
-TIMEOUT_CLOCK = 10  # in seconds
-
+OBSERVATION_PERCENT = [10, 30, 50, 70, 100]
 DATASET_NAME = "goal-plan-recognition-dataset"
 PROBLEM_DIR = "problems"
 TEST_DIR = "test"
@@ -100,10 +92,12 @@ def path_compose(nameList):
 # @timeout_decorator.timeout(TIMEOUT_CLOCK)
 def run_planner_with_timeout(planner_dir, trace_number):
 	# for differet planners
-	# top-k
 
 	if planner_name == "top_k":
+		print(os.getcwd())
 		os.chdir("%s" % planner_dir)
+		print("here")
+		print(os.getcwd())
 		exit_code = os.system("timeout %s ./plan_topk.sh domain.pddl template.pddl %s" % 
 				(str(TIMEOUT_CLOCK), str(trace_number)))
 		os.chdir("..")
@@ -137,6 +131,24 @@ def run_planner_with_timeout(planner_dir, trace_number):
 		return False # no timeout
 		
 
+
+########################### Wrap the miner #########################
+## Parameters are from another file: config_param.py
+
+def miner(directory):
+	for filename in os.listdir(directory):
+		if filename.endswith(".xes"):
+			filename = directory + "/" +filename
+			output = filename + ".pnml"
+
+			if miner_name == "-TSM":
+				os.system("java -cp miner.jar autoMiner -TSM %s %s %s %s %s" % (filename, output, param_dict["TSM_No_limit"], param_dict["TSM_Event_Percentage"], param_dict["TSM_Label_Percentage"]))
+			
+			if miner_name == "-DFM":
+				os.system("java -cp miner.jar autoMiner -DFM %s %s %s" % (filename, output, param_dict["DFM_Threshold"]))
+
+			if miner_name == "-IM":
+				os.system("java -cp miner.jar autoMiner -IM %s %s %s" % (filename, output, param_dict["IM_Threshold"]))
 
 
 ###################################### HELPER CLASSES ##################################
@@ -308,27 +320,24 @@ class planner_manager:
 
 
 ################################## MAIN SCRIPT ############################
-# CONFIGURABLE VARIABLES
-
-DOMAIN_LIST = ["blocks-world"]
-
-planner_name = sys.argv[1]
+# CONFIGURABLE VARIABLES (config_param.py)
 if planner_name == "diverse_sat":
-	trace_number = int(sys.argv[2])
-	metric = sys.argv[3]   # stability, uniqueness, state
-	larger_number = int(sys.argv[4])
+	# trace_number = int(sys.argv[2])
+	trace_number = int(param_dict["Diverse_sat_traces"])
+	metric = param_dict["Diverse_sat_metric"]  # stability, uniqueness, state
+	larger_number = int(param_dict["Diverse_sat_larger_traces"])
 
 elif planner_name == "top_k":
-	trace_number = int(sys.argv[2])
+	trace_number = int(param_dict["Topk_traces"])
 
 elif planner_name == "diverse_agl":
-	trace_number = int(sys.argv[2])
+	trace_number = int(param_dict["Diverse_agl_traces"])
 
 elif planner_name == "diverse_bD":
-	trace_number = int(sys.argv[2])
-	metric = sys.argv[3]   # stability, uniqueness, state
-	bound = float(sys.argv[4])
-	larger_number = int(sys.argv[5])
+	trace_number = int(param_dict["Diverse_bD_traces"])
+	metric = param_dict["Diverse_bD_metric"]  # stability, uniqueness, state
+	bound = float(param_dict["Diverse_bD_bound"])
+	larger_number = int(param_dict["Diverse_bD_larger_traces"])
 
 for domain in DOMAIN_LIST:
 	for per in OBSERVATION_PERCENT:
@@ -366,6 +375,9 @@ for domain in DOMAIN_LIST:
 				# create XES
 				os.system("java -cp xes.jar generate_XES " + working_dir.current_train_traces_path)
 
+				# mine models
+				miner(working_dir.current_train_traces_path)
+
 				# update domain and problem file
 				current_problem = tmp_problem
 
@@ -374,6 +386,10 @@ for domain in DOMAIN_LIST:
 			# break control
 			if count == 2:
 				break
+
+
+
+
 
 
 
