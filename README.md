@@ -2,6 +2,8 @@
 
 ### A few issues:
 
+need to activate python 3 virtural environment if you have both python 2 and python 3
+
 (set absolute path)
 
 export DIVERSE_SCORE_COMPUTATION_PATH=/home/zihang/plan_generators/diversescore 
@@ -21,6 +23,8 @@ change ``time.clock()`` to ``time.time()`` in ``src/translate/find_invariants.py
 Install CPLEX: [instructions](http://www.fast-downward.org/LPBuildInstructions)
 
 Deployed and public available URL: https://zihangs.github.io/plan_generators/
+
+need to activate python 3 virtural environment if you have both python 2 and python 3
 
 ## Dataset
 

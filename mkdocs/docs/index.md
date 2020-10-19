@@ -13,7 +13,7 @@ The top k planner returns a number of k best quality plans. We used this planner
 
 ## Top quality planner
 
-To use the top quality planner, we need set a quality-multiplier. For example, if quality-multiplier = 1.1, then this planner will return all the plans with a cost less than the lowest cost$\times$1.1, the lowest cost is the cost of an optimal plan.
+To use the top quality planner, we need set a quality-multiplier. For example, if quality-multiplier = 1.1, then this planner will return all the plans with a cost less than the lowest cost $\times$1.1, the lowest cost is the cost of an optimal plan.
 
 ```sh
 # ./plan_topq_via_topk.sh <domain> <problem> <quality-multiplier>
@@ -63,8 +63,9 @@ Both the diverse_sat planner and the diverse_bD planner need a ``diversity-metri
 
 **1. Stability**
 
-$$sim_{stability}(\pi,\pi')=\frac{|A(\pi)\cap A(\pi')|}{|A(\pi)\cup A(\pi')|}$$
-
+$$
+sim_{stability}(\pi,\pi')=\frac{|A(\pi)\cap A(\pi')|}{|A(\pi)\cup A(\pi')|}
+$$
 It is a fraction of the number of actions occur in both plans over the total number of actions of these two plans. Notice that both A($\pi$) and A($\pi'$) stand for action sets. Related works are [Fox et al.2006](https://www.aaai.org/Papers/ICAPS/2006/ICAPS06-022.pdf); [Coman and Munoz-Avila 2011](http://www.cse.lehigh.edu/~munoz/Publications/aaai11.pdf).
 
 **2. Uniqueness**
@@ -90,3 +91,4 @@ $$
 $$
 
 For example, if $s_0=\{r_0,r_1\}$, $s'_0=\{r_0,r_2\}$, then $\Delta(s_0,s'_0)=\frac{2}{3}$. The related work can be found here ([Nguyen et al. 2012](https://www.sciencedirect.com/science/article/pii/S0004370212000707)).
+

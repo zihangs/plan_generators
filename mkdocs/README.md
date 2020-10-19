@@ -30,6 +30,8 @@ $ docs  mkdocs.yml
 
 There is a directory ``docs/`` and a file ``mkdocs.yml``, all Markdown files need to be stored in ``docs/`` and we also need to config ``mkdocs.yml`` accordingly. More details see the official website [here](https://www.mkdocs.org/).
 
+In this doc project, material theme is used, [instruction for installing](https://squidfunk.github.io/mkdocs-material/getting-started/).
+
 4. Test and deploy
 
 When writing a Markdown file, we can get a real time preview by running the command below
