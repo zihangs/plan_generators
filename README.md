@@ -6,7 +6,15 @@ need to activate python 3 virtural environment if you have both python 2 and pyt
 
 (set absolute path)
 
-export DIVERSE_SCORE_COMPUTATION_PATH=/home/zihang/plan_generators/diversescore 
+export DIVERSE_SCORE_COMPUTATION_PATH=/home/zihang/plan_generators/diversescore
+
+export DIVERSE_SCORE_COMPUTATION_PATH=/Users/zihangs/plan_generators/diversescore (Mac)
+
+1. need to download diverse score, https://github.com/IBM/diversescore download in /plan_generators
+2. /diversescore/translate/invariant_finder.py (time, python 3) time.clock() -> time.time()
+3. then cd to /diversescore/ build ./build.py
+
+
 
 (if permission denied)
 
