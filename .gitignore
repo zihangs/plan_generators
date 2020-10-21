@@ -5,5 +5,7 @@ forbiditerative/builds/
 goal-plan-recognition-dataset/
 gene_data/
 planner/
+forbiditerative/domain.pddl
+forbiditerative/template.pddl
 miner.jar
 *.pyc
