@@ -11,7 +11,7 @@
 miner_name = "-DFM"     #["-TSM", "-IM", "-DFM"]
 planner_name = "top_k"  #[top_k, diverse_agl, diverse_sat, diverse_bD]
 DOMAIN_LIST = ["blocks-world"]
-TIMEOUT_CLOCK = 100  # in seconds (for planner)
+TIMEOUT_CLOCK = 1800  # in seconds (for planner)
 
 
 param_dict = {
@@ -20,12 +20,12 @@ param_dict = {
 	"TSM_Event_Percentage": 100,
 	"TSM_Label_Percentage": 100,
 
-	"DFM_Threshold": 0.2,
+	"DFM_Threshold": 0.0,
 
 	"IM_Threshold": 0.0,
 
 	##### planners #####
-	"Topk_traces": 10,
+	"Topk_traces": 100,
 
 	"Diverse_agl_traces": 10,
 
