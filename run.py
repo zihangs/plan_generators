@@ -384,8 +384,8 @@ for domain in DOMAIN_LIST:
 			count += 1
 
 			# break control
-			if count == 2:
-				break
+			# if count == 2:
+				# break
 
 
 
