@@ -11,7 +11,7 @@
 miner_name = "-DFM"     #["-TSM", "-IM", "-DFM"]
 planner_name = "top_k"  #[top_k, diverse_agl, diverse_sat, diverse_bD]
 DOMAIN_LIST = ["blocks-world"]
-TIMEOUT_CLOCK = 1800  # in seconds (for planner)
+TIMEOUT_CLOCK = 18000  # in seconds (for planner)
 
 
 param_dict = {

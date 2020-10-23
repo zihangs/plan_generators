@@ -376,7 +376,7 @@ for domain in DOMAIN_LIST:
 				os.system("java -cp xes.jar generate_XES " + working_dir.current_train_traces_path)
 
 				# mine models
-				miner(working_dir.current_train_traces_path)
+				# miner(working_dir.current_train_traces_path)
 
 				# update domain and problem file
 				current_problem = tmp_problem
