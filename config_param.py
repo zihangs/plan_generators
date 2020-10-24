@@ -25,7 +25,7 @@ param_dict = {
 	"IM_Threshold": 0.0,
 
 	##### planners #####
-	"Topk_traces": 1000,
+	"Topk_traces": 100,
 
 	"Diverse_agl_traces": 10,
 
