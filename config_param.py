@@ -1,4 +1,4 @@
-# python venv: source planner/bin/activate
+# python venv: source <venv>/bin/activate
 
 # need to configure (set absolute path)
 # export DIVERSE_SCORE_COMPUTATION_PATH=/home/zihang/plan_generators/diversescore
