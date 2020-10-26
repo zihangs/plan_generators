@@ -102,26 +102,26 @@ def run_planner_with_timeout(planner_dir, trace_number):
 
 	if planner_name == "top_k":
 		os.chdir("%s" % planner_dir)
-		exit_code = os.system("timeout %s ./plan_topk.sh domain.pddl template.pddl %s &> /dev/null" % 
+		exit_code = os.system("timeout %s ./plan_topk.sh domain.pddl template.pddl %s > /dev/null" % 
 				(str(TIMEOUT_CLOCK), str(trace_number)))
 		os.chdir("..")
 
 	elif planner_name == "diverse_agl":
 		os.chdir("%s" % planner_dir)
-		exit_code = os.system("timeout %s ./plan_diverse_agl.sh domain.pddl template.pddl %s &> /dev/null" % 
+		exit_code = os.system("timeout %s ./plan_diverse_agl.sh domain.pddl template.pddl %s > /dev/null" % 
 				(str(TIMEOUT_CLOCK), str(trace_number)))
 		os.chdir("..")
 
 	# need change directory
 	elif planner_name == "diverse_sat":
 		os.chdir("%s" % planner_dir)
-		exit_code = os.system("timeout %s ./plan_diverse_sat.sh domain.pddl template.pddl %s %s %s &> /dev/null" % 
+		exit_code = os.system("timeout %s ./plan_diverse_sat.sh domain.pddl template.pddl %s %s %s > /dev/null" % 
 				(str(TIMEOUT_CLOCK), str(trace_number), metric, str(larger_number)))
 		os.chdir("..")
 
 	elif planner_name == "diverse_bD":
 		os.chdir("%s" % planner_dir)
-		exit_code = os.system("timeout %s ./plan_diverse_bounded.sh domain.pddl template.pddl %s %s %s %s &> /dev/null" % 
+		exit_code = os.system("timeout %s ./plan_diverse_bounded.sh domain.pddl template.pddl %s %s %s %s > /dev/null" % 
 				(str(TIMEOUT_CLOCK), str(trace_number), metric, bound, str(larger_number)))
 		os.chdir("..")
 
