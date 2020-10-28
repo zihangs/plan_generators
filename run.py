@@ -430,8 +430,8 @@ for domain in DOMAIN_LIST:
 			count += 1
 
 			# break control
-			if count == 2:
-				break
+			# if count == 2:
+				# break
 
 		# remove the tmp template and hyps
 		os.system("rm -rf %s" % path_compose([OUTPUT, domain, PROBLEM_DIR, per, "template.pddl"]))
