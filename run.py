@@ -1,18 +1,53 @@
+# python venv: source <venv>/bin/activate
+
+# need to configure (set absolute path)
+# export DIVERSE_SCORE_COMPUTATION_PATH=/home/zihang/plan_generators/diversescore
+
+# python run.py top_k 10
+# python run.py diverse_agl 10
+# python run.py diverse_sat 10 stability 20
+# python run.py diverse_bD 10 stability 0.1 20
+
 import os
 import sys
 import time
 import fileinput
-
 from subprocess import DEVNULL, STDOUT, check_call
 
-from config_param import *
+#######################################################################
+########################## Parameters Configuration ###################
+#######################################################################
+
+planner_name = "top_k"  #[top_k, diverse_agl, diverse_sat, diverse_bD]
+DOMAIN_LIST = ["sokoban", "blocks-world", "easy-ipc-grid"]
+TIMEOUT_CLOCK = 1800  # in seconds (for planner)
+
+param_dict = {
+	##### planners #####
+	"Topk_traces": 50,
+
+	"Diverse_agl_traces": 10,
+
+	"Diverse_sat_traces": 10,
+	"Diverse_sat_metric": "stability",
+	"Diverse_sat_larger_traces": 20,
+
+	"Diverse_bD_traces": 10,
+	"Diverse_bD_metric": "stability",
+	"Diverse_bD_bound": 0.1,
+	"Diverse_bD_larger_traces": 20
+}
+
+########################################################################
+########################################################################
+
 
 # CONSTANt VARIABLES
 OBSERVATION_PERCENT = [10, 30, 50, 70, 100]
 DATASET_NAME = "goal-plan-recognition-dataset"
 PROBLEM_DIR = "problems"
 TEST_DIR = "test"
-TIMEOUT_REPORT_PATH = './gene_data/report.csv'
+TIMEOUT_REPORT_PATH = './gene_data/'
 OUTPUT = "gene_data"
 
 ################################# HELPER FUNCTIONS ##############################
@@ -140,25 +175,6 @@ def remove_hidden_files(listOfFiles):
 	for file in listOfFiles:
 		if file[0] == ".":
 			listOfFiles.remove(file)
-
-
-########################### Wrap the miner #########################
-## Parameters are from another file: config_param.py
-
-def miner(directory):
-	for filename in os.listdir(directory):
-		if filename.endswith(".xes"):
-			filename = directory + "/" +filename
-			output = filename + ".pnml"
-
-			if miner_name == "-TSM":
-				os.system("java -cp miner.jar autoMiner -TSM %s %s %s %s %s" % (filename, output, param_dict["TSM_No_limit"], param_dict["TSM_Event_Percentage"], param_dict["TSM_Label_Percentage"]))
-			
-			if miner_name == "-DFM":
-				os.system("java -cp miner.jar autoMiner -DFM %s %s %s" % (filename, output, param_dict["DFM_Threshold"]))
-
-			if miner_name == "-IM":
-				os.system("java -cp miner.jar autoMiner -IM %s %s %s" % (filename, output, param_dict["IM_Threshold"]))
 
 
 ###################################### HELPER CLASSES ##################################
@@ -335,8 +351,9 @@ class planner_manager:
 			os.system("rm -rf %s/" % self.extracted_dir.current_problem_num_path)
 			os.system("rm -rf %s/" % self.extracted_dir.current_test_num_path)
 
-			mode = 'a' if os.path.exists(TIMEOUT_REPORT_PATH) else 'w'
-			with open(TIMEOUT_REPORT_PATH, mode) as f:
+			file_path = TIMEOUT_REPORT_PATH + self.extracted_dir.domain + ".csv"
+			mode = 'a' if os.path.exists(file_path) else 'w'
+			with open(file_path, mode) as f:
 				f.write("%s, %s, %s, %s\n" % (self.extracted_dir.domain,
 					self.extracted_dir.percentage, self.extracted_dir.number,
 					self.extracted_dir.tar))
@@ -378,15 +395,14 @@ for domain in DOMAIN_LIST:
 		remove_hidden_files(archived_list)
 
 		for file in archived_list:
-
 			print(file)
-
 			working_dir = extracted_dir(OUTPUT, domain, per, count, file)
 			working_dir.extract_tar()
 			working_dir.copy_obs_to_test()
 			working_dir.store_template_stable()
 			working_dir.add_goal_tag()
 			working_dir.add_cost_suffix()
+
 			# generate curr_problem for tracking
 			curr_problem = problem(path_compose([working_dir.current_problem_num_path, "template.pddl"]),
 				path_compose([working_dir.current_problem_num_path, "hyps.dat"]))
@@ -414,9 +430,6 @@ for domain in DOMAIN_LIST:
 			if not has_timeout:
 				# create XES
 				os.system("java -cp xes.jar generate_XES " + working_dir.current_train_traces_path)
-
-				# mine models
-				# miner(working_dir.current_train_traces_path)
 
 				# update domain and problem file
 				prev_problem = problem(path_compose([working_dir.current_problem_higher_path, "template.pddl"]),
