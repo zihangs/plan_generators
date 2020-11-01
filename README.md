@@ -1,90 +1,42 @@
-# Documentation built with MkDocs
+# Generate plans using forbid iterative planners (top-k, diverse, etc)
 
-### A few issues:
+This is a tool for creating synthetic plans, the generated plans will be converted to event logs (`.xes` files). Basically, this is a script which wrapped up current exisiting planners and the output data are in a suitable structure and format for our goal recognition experiments.
 
-need to activate python 3 virtural environment if you have both python 2 and python 3
+### Things need to be prepared
 
-(set absolute path)
+1. For running diverse planner, CPLEX and an recommended fast-downward planner is required.
 
-export DIVERSE_SCORE_COMPUTATION_PATH=/home/zihang/plan_generators/diversescore
+2. Required python 3 runtime environment, I recommend to build a python 3 virtual environment if you both have python 2 and python 3 installed.
 
-export DIVERSE_SCORE_COMPUTATION_PATH=/Users/zihangs/plan_generators/diversescore (Mac)
+3. Need to complie C++ source codes, by following instuctions (CPLEX need to be pre-installed).
 
-1. need to download diverse score, https://github.com/IBM/diversescore download in /plan_generators
-2. /diversescore/translate/invariant_finder.py (time, python 3) time.clock() -> time.time()
-3. then cd to /diversescore/ build ./build.py
+4. To configure the command line environment variables in absolute path
+
+   export DIVERSE_SCORE_COMPUTATION_PATH=/home/zihang/plan_generators/diversescore
+
+   export DIVERSE_SCORE_COMPUTATION_PATH=/Users/zihangs/plan_generators/diversescore (Mac)
+
+5. Download the dataset and put the downloaded dataset in this directory.
 
 
 
-(if permission denied)
+### Commands for running the script
 
-sudo chmod +x *.sh
-
-sudo chmod +x *.py
-
-better to use git clone, everything will be executable.
-
-(if "clock" issue)
-
-change ``time.clock()`` to ``time.time()`` in ``src/translate/find_invariants.py``, and then again ``./build.py``.
-
-Install CPLEX: [instructions](http://www.fast-downward.org/LPBuildInstructions)
-
-Deployed and public available URL: https://zihangs.github.io/plan_generators/
-
-need to activate python 3 virtural environment if you have both python 2 and python 3
-
-## Dataset
-
-Goal and plan recognition dataset can be accessed [here](https://github.com/pucrs-automated-planning/goal-plan-recognition-dataset/)
-
-### Instruction of trace generating script
-
-Required python 3 to run.py. Require to download planners ([FI](https://github.com/IBM/forbiditerative)), store the planners in `./forbiditerative/` directory, need to build and test if the planners can run (a few dependency need to install). The generated traces are stored in `./gene_data/` directory 
-
-**To build a common interface of planner:**
-
-- Where to put the planner (dir)?
-- Where are the domain (original) dataset?
-- Where does the generated trace stored? 
-
-(TODO: explain the structure of traces).
-
-Planner specific parameters (top_k, diverse_agl, diverse_sat, diverse_bD):
-
-- top_k: planner_name, trace_number
-- diverse_agl: planner_name, trace_number
-- diverse_sat: planner_name, trace_number, metric, larger_number
-- diverse_bD: planner_name, trace_number, metric, bound, larger_number
+Before run the commands, you have to check the parameter configrations, the parameters at the top of `run.py`. Then just run the following commands to starts.
 
 ```sh
-# python run.py <planner_name> <trace_number>
-python run.py top_k 10
+# activate the python 3 venv (if you don't using venv, ignore this step)
+source <venv>/bin/activate
 
-# python run.py <planner_name> <trace_number>
-python run.py diverse_agl 10
-
-# python run.py <planner_name> <trace_number> <metric> <larger_number>
-python run.py diverse_sat 10 stability 20
-
-# python run.py <planner_name> <trace_number> <metric> <bound> <larger_number>
-python run.py diverse_bD 10 stability 0.1 20
+# run script
+python run.py
 ```
 
+It will take a long time to run.
 
 
-## Approaches to compare
 
-GR using planner:
+### Outputs
 
-Landmark approach (Felipe): https://github.com/pucrs-automated-planning/diverse-plan-rec
-
-GR as planning (Shirin): https://github.com/shirin888/planrecogasplanning-ijcai16-benchmarks
-
-GR approaches mentioned in AAMAS:
-
-landmark approach: https://github.com/pucrs-automated-planning/Planning-GoalRecognition
-
-Code to run AAAI-10 version but using latest BFWS planners as satisficing reasoners: https://github.com/nirlipo/pnet-pr/tree/master/pr_as_planning
-
+Once the process is completed, check this directory, there will be a sub-directory `gene_data/`. All the domains, problems, tests and generated plans will be there. Then this directory will be used for our next steps for mining process models.
 
