@@ -24,10 +24,6 @@ This is a tool for creating synthetic plans, the generated plans will be convert
 
 Before run the commands, you have to check the parameter configrations, the parameters at the top of `run.py`. Then just run the following commands to starts.
 
-```
-![title](params.png)
-```
-
 ```sh
 # activate the python 3 venv (if you don't using venv, ignore this step)
 source <venv>/bin/activate
