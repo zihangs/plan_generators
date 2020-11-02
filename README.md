@@ -12,7 +12,7 @@ This is a tool for creating synthetic plans, the generated plans will be convert
 
 4. To configure the command line environment variables in absolute path
 
-   export DIVERSE_SCORE_COMPUTATION_PATH=/home/zihang/plan_generators/diversescore
+   export DIVERSE_SCORE_COMPUTATION_PATH=/home/ubuntu/plan_generators/diversescore (VM)
 
    export DIVERSE_SCORE_COMPUTATION_PATH=/Users/zihangs/plan_generators/diversescore (Mac)
 
