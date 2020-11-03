@@ -18,8 +18,8 @@ from subprocess import DEVNULL, STDOUT, check_call
 ########################## Parameters Configuration ###################
 #######################################################################
 
-planner_name = "top_k"  #[top_k, diverse_agl, diverse_sat, diverse_bD]
-DOMAIN_LIST = ["sokoban", "blocks-world", "easy-ipc-grid"]
+planner_name = "diverse_sat"  #[top_k, diverse_agl, diverse_sat, diverse_bD]
+DOMAIN_LIST = ["easy-ipc-grid"]
 TIMEOUT_CLOCK = 1800  # in seconds (for planner)
 
 param_dict = {
@@ -28,9 +28,9 @@ param_dict = {
 
 	"Diverse_agl_traces": 10,
 
-	"Diverse_sat_traces": 10,
+	"Diverse_sat_traces": 1000,
 	"Diverse_sat_metric": "stability",
-	"Diverse_sat_larger_traces": 20,
+	"Diverse_sat_larger_traces": 2000,
 
 	"Diverse_bD_traces": 10,
 	"Diverse_bD_metric": "stability",
