@@ -20,7 +20,7 @@ from subprocess import DEVNULL, STDOUT, check_call
 
 planner_name = "diverse_sat"  #[top_k, diverse_agl, diverse_sat, diverse_bD]
 DOMAIN_LIST = ["easy-ipc-grid"]
-TIMEOUT_CLOCK = 1800  # in seconds (for planner)
+TIMEOUT_CLOCK = 3600  # in seconds (for planner)
 
 param_dict = {
 	##### planners #####
