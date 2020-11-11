@@ -14,6 +14,8 @@ This is a tool for creating synthetic plans, the generated plans will be convert
 
    export DIVERSE_SCORE_COMPUTATION_PATH=/home/ubuntu/plan_generators/diversescore (VM)
 
+   export DIVERSE_FAST_DOWNWARD_PLANNER_PATH=/home/ubuntu/plan_generators/fd-red-black-postipc2018 (VM)
+
    export DIVERSE_SCORE_COMPUTATION_PATH=/Users/zihangs/plan_generators/diversescore (Mac)
 
 5. Download the dataset and put the downloaded dataset in this directory.
