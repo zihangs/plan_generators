@@ -1,4 +1,4 @@
-# python venv: source <venv>/bin/activate
+#### python venv: source <venv>/bin/activate
 
 # need to configure (set absolute path)
 # export DIVERSE_SCORE_COMPUTATION_PATH=/home/zihang/plan_generators/diversescore
@@ -28,9 +28,9 @@ param_dict = {
 
 	"Diverse_agl_traces": 10,
 
-	"Diverse_sat_traces": 1000,
+	"Diverse_sat_traces": 100,
 	"Diverse_sat_metric": "stability",
-	"Diverse_sat_larger_traces": 2000,
+	"Diverse_sat_larger_traces": 200,
 
 	"Diverse_bD_traces": 10,
 	"Diverse_bD_metric": "stability",
@@ -429,7 +429,7 @@ for domain in DOMAIN_LIST:
 
 			if not has_timeout:
 				# create XES
-				os.system("java -cp xes.jar generate_XES " + working_dir.current_train_traces_path)
+				# os.system("java -cp xes.jar generate_XES " + working_dir.current_train_traces_path)
 
 				# update domain and problem file
 				prev_problem = problem(path_compose([working_dir.current_problem_higher_path, "template.pddl"]),
