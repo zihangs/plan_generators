@@ -3,10 +3,10 @@
 # need to configure (set absolute path)
 # export DIVERSE_SCORE_COMPUTATION_PATH=/home/zihang/plan_generators/diversescore
 
-# python run.py top_k 10
-# python run.py diverse_agl 10
-# python run.py diverse_sat 10 stability 20
-# python run.py diverse_bD 10 stability 0.1 20
+# python run.py top_k 10 <domain>
+# python run.py diverse_agl 10 <domain>
+# python run.py diverse_sat 10 stability 20 <domain>
+# python run.py diverse_bD 10 stability 0.1 20 <domain>
 
 import os
 import sys
@@ -18,29 +18,8 @@ from subprocess import DEVNULL, STDOUT, check_call
 ########################## Parameters Configuration ###################
 #######################################################################
 
-planner_name = "diverse_sat"  #[top_k, diverse_agl, diverse_sat, diverse_bD]
-DOMAIN_LIST = ["easy-ipc-grid"]
+# DOMAIN_LIST = ["blocks-world"]
 TIMEOUT_CLOCK = 3600  # in seconds (for planner)
-
-param_dict = {
-	##### planners #####
-	"Topk_traces": 50,
-
-	"Diverse_agl_traces": 10,
-
-	"Diverse_sat_traces": 100,
-	"Diverse_sat_metric": "stability",
-	"Diverse_sat_larger_traces": 200,
-
-	"Diverse_bD_traces": 10,
-	"Diverse_bD_metric": "stability",
-	"Diverse_bD_bound": 0.1,
-	"Diverse_bD_larger_traces": 20
-}
-
-########################################################################
-########################################################################
-
 
 # CONSTANt VARIABLES
 OBSERVATION_PERCENT = [10, 30, 50, 70, 100]
@@ -362,95 +341,96 @@ class planner_manager:
 
 
 ################################## MAIN SCRIPT ############################
-# CONFIGURABLE VARIABLES (config_param.py)
+planner_name = sys.argv[1]
+
 if planner_name == "diverse_sat":
-	# trace_number = int(sys.argv[2])
-	trace_number = int(param_dict["Diverse_sat_traces"])
-	metric = param_dict["Diverse_sat_metric"]  # stability, uniqueness, state
-	larger_number = int(param_dict["Diverse_sat_larger_traces"])
+	trace_number = int(sys.argv[2])
+	metric = sys.argv[3]   # stability, uniqueness, state
+	larger_number = int(sys.argv[4])
 
 elif planner_name == "top_k":
-	trace_number = int(param_dict["Topk_traces"])
+	trace_number = int(sys.argv[2])
 
 elif planner_name == "diverse_agl":
-	trace_number = int(param_dict["Diverse_agl_traces"])
+	trace_number = int(sys.argv[2])
 
 elif planner_name == "diverse_bD":
-	trace_number = int(param_dict["Diverse_bD_traces"])
-	metric = param_dict["Diverse_bD_metric"]  # stability, uniqueness, state
-	bound = float(param_dict["Diverse_bD_bound"])
-	larger_number = int(param_dict["Diverse_bD_larger_traces"])
+	trace_number = int(sys.argv[2])
+	metric = sys.argv[3]   # stability, uniqueness, state
+	bound = float(sys.argv[4])
+	larger_number = int(sys.argv[5])
 
-for domain in DOMAIN_LIST:
-	for per in OBSERVATION_PERCENT:
-		archived_list = os.listdir(path_compose([DATASET_NAME, domain, per]))
+domain = sys.argv[-1]
 
-		# track the template and hyp: check whether the <domain + goals> are identical
-		prev_problem = problem("", "") # initialize the first problem (NOT TIME OUT)
+for per in OBSERVATION_PERCENT:
+	archived_list = os.listdir(path_compose([DATASET_NAME, domain, per]))
 
-		# extract tar.bz2
-		count = 0
+	# track the template and hyp: check whether the <domain + goals> are identical
+	prev_problem = problem("", "") # initialize the first problem (NOT TIME OUT)
 
-		archived_list.sort()
-		remove_hidden_files(archived_list)
+	# extract tar.bz2
+	count = 0
 
-		for file in archived_list:
-			print(file)
-			working_dir = extracted_dir(OUTPUT, domain, per, count, file)
-			working_dir.extract_tar()
-			working_dir.copy_obs_to_test()
-			working_dir.store_template_stable()
-			working_dir.add_goal_tag()
-			working_dir.add_cost_suffix()
+	archived_list.sort()
+	remove_hidden_files(archived_list)
 
-			# generate curr_problem for tracking
-			curr_problem = problem(path_compose([working_dir.current_problem_num_path, "template.pddl"]),
-				path_compose([working_dir.current_problem_num_path, "hyps.dat"]))
+	for file in archived_list:
+		print(file)
+		working_dir = extracted_dir(OUTPUT, domain, per, count, file)
+		working_dir.extract_tar()
+		working_dir.copy_obs_to_test()
+		working_dir.store_template_stable()
+		working_dir.add_goal_tag()
+		working_dir.add_cost_suffix()
 
-			has_timeout = False
+		# generate curr_problem for tracking
+		curr_problem = problem(path_compose([working_dir.current_problem_num_path, "template.pddl"]),
+			path_compose([working_dir.current_problem_num_path, "hyps.dat"]))
 
-			if (prev_problem.exist() and prev_problem.identical(curr_problem) and (not prev_problem.timeout)):
-				# current problem is identical as previous, doesn't need run planners
-				print("skip " + str(count))
+		has_timeout = False
 
-			elif (prev_problem.exist() and prev_problem.identical(curr_problem) and prev_problem.timeout):
-				# need to skip and remove this problem, give timeout flag
-				print("skip TIMEOUT " + str(count))
-				has_timeout = True
+		if (prev_problem.exist() and prev_problem.identical(curr_problem) and (not prev_problem.timeout)):
+			# current problem is identical as previous, doesn't need run planners
+			print("skip " + str(count))
 
-				os.system("rm -rf %s/" % working_dir.current_problem_num_path)
-				os.system("rm -rf %s/" % working_dir.current_test_num_path)
+		elif (prev_problem.exist() and prev_problem.identical(curr_problem) and prev_problem.timeout):
+			# need to skip and remove this problem, give timeout flag
+			print("skip TIMEOUT " + str(count))
+			has_timeout = True
 
-			else:
-				############################# need to call planner ################################
+			os.system("rm -rf %s/" % working_dir.current_problem_num_path)
+			os.system("rm -rf %s/" % working_dir.current_test_num_path)
 
-				manager = planner_manager(working_dir)
-				has_timeout = manager.iter_each_goals()
+		else:
+			############################# need to call planner ################################
 
-			if not has_timeout:
-				# create XES
-				# os.system("java -cp xes.jar generate_XES " + working_dir.current_train_traces_path)
+			manager = planner_manager(working_dir)
+			has_timeout = manager.iter_each_goals()
 
-				# update domain and problem file
-				prev_problem = problem(path_compose([working_dir.current_problem_higher_path, "template.pddl"]),
-					path_compose([working_dir.current_problem_higher_path, "hyps.dat"]))
+		if not has_timeout:
+			# create XES
+			# os.system("java -cp xes.jar generate_XES " + working_dir.current_train_traces_path)
 
-			else:  # time out
-				prev_problem = problem(path_compose([working_dir.current_problem_higher_path, "template.pddl"]),
-					path_compose([working_dir.current_problem_higher_path, "hyps.dat"]))
-				prev_problem.timeout = True
+			# update domain and problem file
+			prev_problem = problem(path_compose([working_dir.current_problem_higher_path, "template.pddl"]),
+				path_compose([working_dir.current_problem_higher_path, "hyps.dat"]))
 
-			count += 1
+		else:  # time out
+			prev_problem = problem(path_compose([working_dir.current_problem_higher_path, "template.pddl"]),
+				path_compose([working_dir.current_problem_higher_path, "hyps.dat"]))
+			prev_problem.timeout = True
 
-			# break control
-			# if count == 2:
-				# break
+		count += 1
 
-		# remove the tmp template and hyps
-		os.system("rm -rf %s" % path_compose([OUTPUT, domain, PROBLEM_DIR, per, "template.pddl"]))
-		os.system("rm -rf %s" % path_compose([OUTPUT, domain, PROBLEM_DIR, per, "hyps.dat"]))
+		# break control
+		# if count == 2:
+			# break
 
-			
+	# remove the tmp template and hyps
+	os.system("rm -rf %s" % path_compose([OUTPUT, domain, PROBLEM_DIR, per, "template.pddl"]))
+	os.system("rm -rf %s" % path_compose([OUTPUT, domain, PROBLEM_DIR, per, "hyps.dat"]))
+
+		
 
 
 
